@@ -1,0 +1,53 @@
+version: '3.7'
+networks:
+  app:
+    name: app
+
+services:
+  server:
+    build:
+      context: ../..
+      dockerfile: Dockerfile.v2
+    # ports:
+    #   - 3000:3000
+    env_file: .env
+    networks:
+      - app
+    depends_on:
+      - mongo
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 126M
+  mongo:
+    image: mongo:6.0.2
+    ports:
+      - 27019:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_DATABASE=database
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    networks:
+      - app
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 126M
+  redis:
+    image: redis:7.0.5-alpine
+    command: redis-server --requirepass 123123
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 126M
+    ports:
+      - 6378:6379
+    networks:
+      - app
+    # volumes:
+    #   - ./data:/data/db
+    # command: mongod --bind_ip_all

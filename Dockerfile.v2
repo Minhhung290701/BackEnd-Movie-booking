@@ -1,0 +1,14 @@
+FROM node:16.13.2-alpine as builder
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install 
+
+COPY . /app
+
+RUN mkdir -p /app/logs
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]

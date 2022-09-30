@@ -5,7 +5,7 @@ DEBUG_HIDE_DATE=true
 
 
 # [app]
-PORT=8600
+PORT=3000
 
 APP_NAME=Luxuria
 SERVICE_NAME=Chat
@@ -23,8 +23,8 @@ REFRESH_TOKEN_TTL=10d
 MYSQL_CONNECTION_STRING=mysql2://root:@localhost:3306/citizen
 
 # [mongodb]
-MONGODB_CONNECTION_STRING="mongodb://hungtvm:hungtvmfamtech@115.146.127.164:27017/?authSource=admin&retryWrites=false"
-MONGODB_DEFAULT_DB=HungTVM
+MONGODB_CONNECTION_STRING="mongodb://user:pass@nodeapp-mongodb-headless:27017/?authSource=admin&retryWrites=false"
+MONGODB_DEFAULT_DB=database
 
 # [rabbitmq]
 RABBITMQ_VIRTUAL_HOST_NETIZEN=/
@@ -39,9 +39,9 @@ NEO4J_MAX_CONNECTION_POOL_SIZE=2000
 # [redis]
 # redis modes: normal|cluster|sentinel
 REDIS_MODE=normal
-REDIS_PORT=17089
-REDIS_HOST=redis-17089.c256.us-east-1-2.ec2.cloud.redislabs.com
-REDIS_PASSWORD=Qpai1o3zOIFYZdd7R2RgSo3pR8aVl4Ch
+REDIS_PORT=6379
+REDIS_HOST=redis
+REDIS_PASSWORD=123123
 REDIS_DB=0
 REDIS_PREFIX=lx-ntz
 # using for cluster|sentinel mode

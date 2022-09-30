@@ -1,0 +1,12 @@
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 17.2.0
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 13.1.5
+- name: sish-client
+  repository: https://aqaurius6666.github.io/helm-charts/
+  version: 0.4.0
+digest: sha256:4618b8eeb3ff592ec9ebee2fc9cd5d6d349492e5a121ed62aba5a1791b48d9eb
+generated: "2022-09-30T15:53:23.901499709+07:00"
