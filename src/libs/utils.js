@@ -298,3 +298,37 @@ exports.randomAsciiString = length => {
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
     )
 }
+
+
+exports.decodeTokenAdmin = (accessToken, ctx) => {
+    if (!accessToken) {
+        const message = 'Authorization is required'
+        debug.warn(message)
+        throw new AuthenticationError(message)
+    }
+
+    const [type, token] = accessToken.split(' ')
+
+    if (type !== 'Bearer' || !token) {
+        const message = 'Authorization must to be in format "Authorization: Bearer [token]"'
+        debug.warn(message)
+        ctx.status = 400
+        throw new AuthenticationError(message)
+    }
+
+    let payload = false
+
+    try {
+        payload = JWT.verify(token, process.env.JWT_SECRET_KEY)
+    } catch (e) {
+        debug.warn(e.message)
+    }
+
+    if (!payload) {
+        debug.warn('invalid token')
+        ctx.status = 401
+        throw new AuthenticationError('invalid token')
+    }
+
+    return payload
+}
