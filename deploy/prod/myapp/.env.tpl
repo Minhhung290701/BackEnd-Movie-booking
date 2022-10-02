@@ -23,8 +23,8 @@ REFRESH_TOKEN_TTL=10d
 MYSQL_CONNECTION_STRING=mysql2://root:@localhost:3306/citizen
 
 # [mongodb]
-MONGODB_CONNECTION_STRING="mongodb://user:pass@nodeapp-mongodb-headless:27017/?authSource=admin&retryWrites=false"
-MONGODB_DEFAULT_DB=database
+MONGODB_CONNECTION_STRING=${MONGODB_CONNECTION_STRING}
+MONGODB_DEFAULT_DB=${MONGODB_DEFAULT_DB}
 
 # [rabbitmq]
 RABBITMQ_VIRTUAL_HOST_NETIZEN=/
