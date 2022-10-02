@@ -40,8 +40,8 @@ NEO4J_MAX_CONNECTION_POOL_SIZE=2000
 # redis modes: normal|cluster|sentinel
 REDIS_MODE=normal
 REDIS_PORT=6379
-REDIS_HOST=redis
-REDIS_PASSWORD=123123
+REDIS_HOST=${REDIS_HOST}
+REDIS_PASSWORD=${REDIS_PASS}
 REDIS_DB=0
 REDIS_PREFIX=lx-ntz
 # using for cluster|sentinel mode
