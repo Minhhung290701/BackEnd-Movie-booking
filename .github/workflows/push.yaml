@@ -57,6 +57,6 @@ jobs:
         uses: alexrster/pipelines@v2
         with:
           azure-devops-project-url: https://azure.aqaurius6666.space/DefaultCollection/Chuyen%20de%20Nhat%20Bon
-          azure-pipeline-name: 'Training-system-web'
+          azure-pipeline-name: ${{ secrets.AZURE_PIPELINE_NAME }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure-pipeline-variables: '{"TAG": "${{ needs.build.outputs.tag }}", "IMAGE_REPOSITORY" : "${{ env.image_repository }}"}'
