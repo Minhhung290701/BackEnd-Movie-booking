@@ -1,0 +1,16 @@
+.github
+.vscode
+env
+.editorconfig
+.eslintrc*
+.gitignore
+.prettierrc*
+desktop.ini
+*.md
+Jenkinsfile
+process.config.js
+deploy
+Dockerfile*
+.dockerignore
+.git
+Makefile

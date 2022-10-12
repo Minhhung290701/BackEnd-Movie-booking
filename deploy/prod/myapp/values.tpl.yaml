@@ -1,0 +1,133 @@
+# Default values for myapp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ${IMAGE_REPOSITORY}
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ${TAG}
+fullnameOverride: 
+nameOverride: 
+imagePullSecrets: 
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "app-sa"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  
+
+resources: 
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+redis:
+  enabled: true
+  image:
+    tag: 7.0.5-debian-11-r2
+  architecture: standalone
+  auth:
+    enabled: true
+    password: "123123"
+  master:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    kind: Deployment
+    persistence:
+      enabled: false
+    service:
+      ports:
+        redis: 6379
+
+mongodb:
+  enabled: true
+  image:
+    tag: 4.2.21-debian-10-r8
+  auth:
+    enabled: true
+    replicaSetKey: "123123123"
+    rootUser: userroot
+    rootPassword: passroot
+    usernames:
+      - user
+    passwords:
+      - pass
+    databases:
+      - database
+  architecture: replicaset
+  replicaCount: 1
+  useStatefulSet: false
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  startupProbe:
+    enabeld: false
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 300m
+  # replicaSetConfigurationSettings:
+  #   enabled: false
+  persistence:
+    enabled: true
+    # storageClass: "microk8s-hostpath"
+  arbiter:
+    enabled: false
+
+sish-client:
+  enabled: ${SISH_ENABLED}
+  image:
+    repository: kroniak/ssh-client
+    tag: latest
+  service:
+    name: ssh-tunnel
+  services:
+    sish:
+      domain: ${DOMAIN}
+      port: 22222
+      request:
+        domain: ${SUB_DOMAIN}
+        port: 80
+      from:
+        domain: ${FROM_DOMAIN}
+        port: ${FROM_PORT}
