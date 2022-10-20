@@ -20,6 +20,16 @@ exports.creatArea = async name => {
     return area
 }
 
-exports.deleteArea = async _id => {
-    await AreaSchema.deleteOne({_id:_id})
+exports.deleteArea = async id => {
+    await AreaSchema.deleteOne({_id:id})
+}
+
+exports.getAreas = async (limit, skip) => {
+    debug.log(limit,skip)
+
+    const total = await AreaSchema.count({})
+
+    const areas = await AreaSchema.find({}).skip(skip).limit(limit).lean()
+
+    return {areas, total}
 }

@@ -9,7 +9,7 @@ exports.addArea = {
     }),
 }
 
-exports.deleteArea = {
+exports.delete = {
     params: Joi.object({
         id:Joi.string()
     })
@@ -25,5 +25,29 @@ exports.addCinema = {
         lon: Joi.string(),
         description: Joi.string(),
         room: Joi.array().items(Joi.number())
+    })
+}
+
+
+exports.addFilm = {
+    body: Joi.object({
+        name: Joi.string(),
+        avatarUrl: Joi.string(),
+        ageRestriction: Joi.number(),
+        durationMin: Joi.number(),
+        trailerUrl: Joi.string(),
+        director: Joi.string(),
+        actors: Joi.string(),
+        description: Joi.string(),
+        openingDay: Joi.date().format('YYYY-MM-DD')
+    })
+}
+
+exports.addFilmSchedule = {
+    body: Joi.object({
+        filmId: Joi.objectId(),
+        cinemaId: Joi.objectId(),
+        room: Joi.string(),
+        time: Joi.date().utc().format('YYYY-MM-DD HH:mm')
     })
 }
