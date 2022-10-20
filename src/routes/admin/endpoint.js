@@ -1,4 +1,5 @@
 const Router = require('@koa/router')
+const { valid } = require('joi')
 const {
     validateApiSchema: validate,
     validateAdminAccessToken: auth,
@@ -11,7 +12,11 @@ const router = new Router({ prefix: '/admin'})
 router.use(auth)
 
 router.post('/area', validate(schemas.addArea), ctrl.addArea)
-router.del('/area/:id', validate(schemas.deleteArea), ctrl.deleteArea)
+router.del('/area/:id', validate(schemas.delete), ctrl.deleteArea)
 router.post('/cinema', validate(schemas.addCinema), ctrl.addCinema)
+router.delete('/cinema/:id', validate(schemas.delete), ctrl.deleteCinema)
+router.post('/film', validate(schemas.addFilm), ctrl.addFilm)
+router.delete('/film/:id', validate(schemas.delete), ctrl.deleteFilm)
+router.post('/film-schedule', validate(schemas.addFilmSchedule), ctrl.addFilmSchedule)
 
 module.exports = [router]

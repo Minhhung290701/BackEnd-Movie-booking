@@ -13,7 +13,7 @@ exports.register = {
         gmail: model.gmail.required(),
         password: model.password.required(),
         name: Joi.string().required(),
-        birthday: Joi.date().format('YYYY-MM-DD').utc(),
+        birthday: Joi.date().format('YYYY-MM-DD').utc().required(),
         gender: Joi.string()
     }),
 }

@@ -8,3 +8,5 @@ exports.Area = require('./area')
 exports.Cinema = require('./cinema')
 
 exports.Film = require('./film')
+
+exports.FilmSchedule = require('./film-schedule')

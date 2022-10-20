@@ -7,9 +7,9 @@ const {
 const ctrl = require('./controller')
 const schemas = require('./schema-api')
 
-const router = new Router({ prefix: '/profile'} )
+const router = new Router({prefix:'/user'})
 router.use(auth)
 
-router.put('/', validate(schemas.updateProfile), ctrl.updateProfile)
+router.put('/profile', validate(schemas.updateProfile), ctrl.updateProfile)
 
 module.exports = [router]
