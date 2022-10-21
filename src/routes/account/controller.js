@@ -64,6 +64,10 @@ exports.login = async ctx => {
         throw new ValidationError('User not found')
     }
 
+    if(profile.isDeleted == true) {
+        throw new PermissionError('Account is locked by admin.Please contact us to resolve')
+    }
+
     ctx.body = {
         ...profile,
         accessToken: utils.generateAccessToken(profile),

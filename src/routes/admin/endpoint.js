@@ -18,5 +18,8 @@ router.delete('/cinema/:id', validate(schemas.delete), ctrl.deleteCinema)
 router.post('/film', validate(schemas.addFilm), ctrl.addFilm)
 router.delete('/film/:id', validate(schemas.delete), ctrl.deleteFilm)
 router.post('/film-schedule', validate(schemas.addFilmSchedule), ctrl.addFilmSchedule)
+router.get('/user/get-users', validate(schemas.getUsers), ctrl.getUsers)
+router.get('/user/get-locked-users', validate(schemas.getUsers), ctrl.getLockedUsers )
+router.delete('/user/:id', validate(schemas.delete), ctrl.deleteAndUnDeleteUser)
 
 module.exports = [router]

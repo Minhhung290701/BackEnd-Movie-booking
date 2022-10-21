@@ -51,3 +51,10 @@ exports.addFilmSchedule = {
         time: Joi.date().utc().format('YYYY-MM-DD HH:mm')
     })
 }
+
+exports.getUsers = {
+    query: Joi.object({
+        limit: Joi.number(),
+        skipPage: Joi.number()
+    })
+}

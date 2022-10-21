@@ -19,6 +19,25 @@ exports.updateProfile = async ctx => {
     ctx.body = newProfile
 }
 
+exports.getProfile = async ctx => {
+    const p = ctx.state.profile
+
+    debug.log(p)
+    
+    const profile = await Profile.Model.getProfileById(p._id)
+
+    ctx.body = {
+        _id:profile._id,
+        name:profile.name,
+        gender: profile?.gender,
+        birthday: profile?.birthday,
+        description: profile?.description,
+        totalPay: profile.totalPay,
+        memberClass: profile.memberClass
+
+    }
+}
+
 exports.login = async ctx => {
     const { callingCode, phoneNumber, password } = ctx.request.body
 

@@ -11,5 +11,6 @@ const router = new Router({prefix:'/user'})
 router.use(auth)
 
 router.put('/profile', validate(schemas.updateProfile), ctrl.updateProfile)
+router.get('/profile', ctrl.getProfile)
 
 module.exports = [router]
