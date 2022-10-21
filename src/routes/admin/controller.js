@@ -1,4 +1,4 @@
-const { Area, Cinema, Film, FilmSchedule} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Profile} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 
 const debug = Debug()
@@ -96,3 +96,38 @@ exports.addFilmSchedule = async ctx => {
 
     ctx.body = filmSchedule
 }
+
+
+exports.getUsers = async ctx => {
+    const limit = parseInt(ctx.query.limit || '20')
+    const skipPage = parseInt(ctx.query.skipPage || '0')
+    const skip = parseInt(skipPage || '0') * limit
+
+    const {users, total} = await Profile.Model.getProfiles(limit,skip)
+
+    ctx.state.paging = utils.generatePaging(skipPage, limit, total)
+
+    ctx.body = users
+}
+
+
+exports.getLockedUsers = async ctx => {
+    const limit = parseInt(ctx.query.limit || '20')
+    const skipPage = parseInt(ctx.query.skipPage || '0')
+    const skip = parseInt(skipPage || '0') * limit
+
+    const {users, total} = await Profile.Model.getLockedProfiles(limit,skip)
+
+    ctx.state.paging = utils.generatePaging(skipPage, limit, total)
+
+    ctx.body = users
+}
+
+exports.deleteAndUnDeleteUser = async ctx => {
+    const {id} = ctx.params
+
+    await Profile.Model.deleteUndeleteUser(id)
+
+    ctx.body = 'success'
+}
+
