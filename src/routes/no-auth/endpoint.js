@@ -16,6 +16,8 @@ router.get('/cinema/:id',validate(schemas.getCinema), ctrl.getCinema)
 
 router.get('/film/get-films', validate(schemas.getListFilm), ctrl.getListFilm)
 
+router.get('/film/get-film', validate(schemas.getFilm), ctrl.getFilm)
+
 router.get('/film-schedule/get-film-schedules', validate(schemas.getFilmSchedule), ctrl.getFilmSchedule)
 
 

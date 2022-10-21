@@ -35,7 +35,12 @@ exports.getListFilm = {
     query: Joi.object({
         limit: Joi.number(),
         skipPage: Joi.number(),
+        type: Joi.number()
     })
+}
+
+exports.getFilm = {
+    params: Joi.object({ id }),
 }
 
 exports.getCinema = {
