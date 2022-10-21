@@ -21,10 +21,28 @@ exports.deleteFilmSchedule = async id => {
 
 
 exports.getFilmSchedule = async (cinemaId, filmId, date) => {
+    const now = new Date()
     debug.log(cinemaId,filmId)
+    const today = new Date(date+'T00:00')
+    let mili = today.getTime()
+    let newlimi = mili + 172800000/2
+    const tomorrow = new Date(newlimi);
+    debug.log(tomorrow)
+
     let search = {}
+
+    let begin = (today.getTime() < now.getTime())? now:today
+
+    search.time = {
+        $gte: begin,
+        $lte: tomorrow
+    }
+
     if(cinemaId) search.cinemaId = cinemaId
     if(filmId) search.filmId = filmId
+
+    
+    debug.log(search)
     const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
     debug.log(filmSchedules)
 
