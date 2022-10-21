@@ -1,4 +1,4 @@
-const { Area, Cinema, Film, FilmSchedule, Profile} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Profile, Banner} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 
 const debug = Debug()
@@ -11,6 +11,24 @@ const {
     ConflictError,
     DuplicatedError
 } = errors
+
+
+exports.addBanner = async ctx => {
+    const fields = ctx.request.body
+
+    const banner = await Banner.Model.creatBanner(fields)
+
+    ctx.body = banner
+}
+
+exports.deleteBanner = async ctx => {
+    const {id} = ctx.params
+    debug.log(id)
+
+    await Banner.Model.deleteBanner(id)
+
+    ctx.body = 'success'
+}
 
 
 exports.addArea = async ctx => {

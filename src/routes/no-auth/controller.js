@@ -1,4 +1,4 @@
-const { Area, Cinema, Film, FilmSchedule} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Banner} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 
 const debug = Debug()
@@ -11,6 +11,12 @@ const {
     ConflictError,
     DuplicatedError
 } = errors
+
+
+exports.getBanner = async ctx => {
+    const banner = await Banner.Model.getBanners()
+    ctx.body = banner
+}
 
 exports.getAreas = async ctx => {
     const limit = parseInt(ctx.query.limit || '20')
