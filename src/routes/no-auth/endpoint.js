@@ -10,6 +10,8 @@ const schemas = require('./schema-api')
 
 const router = new Router()
 
+router.get('/banner', ctrl.getBanner)
+
 router.get('/area/get-areas', validate(schemas.getAreas), ctrl.getAreas)
 //router.get('/cinema/get-cinemas', validate(schemas.getCinemas), ctrl.getCinemas)
 router.get('/cinema/:id',validate(schemas.getCinema), ctrl.getCinema)

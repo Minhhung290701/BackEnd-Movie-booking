@@ -9,6 +9,12 @@ exports.addArea = {
     }),
 }
 
+exports.addBanner = {
+    body: Joi.object({
+        imgUrl: Joi.string()
+    }),
+}
+
 exports.delete = {
     params: Joi.object({
         id:Joi.string()

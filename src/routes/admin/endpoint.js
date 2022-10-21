@@ -11,6 +11,8 @@ const schemas = require('./schema-api')
 const router = new Router({ prefix: '/admin'})
 router.use(auth)
 
+router.post('/banner', validate(schemas.addBanner), ctrl.addBanner)
+router.del('/banner/:id', validate(schemas.delete), ctrl.deleteBanner)
 router.post('/area', validate(schemas.addArea), ctrl.addArea)
 router.del('/area/:id', validate(schemas.delete), ctrl.deleteArea)
 router.put('/area/:id', validate(schemas.update), ctrl.updateArea)
