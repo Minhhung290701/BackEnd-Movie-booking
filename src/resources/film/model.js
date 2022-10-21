@@ -96,3 +96,9 @@ exports.getFilmById = async id => {
 
     return film
 }
+
+exports.updateFilm = async (id, fields) => {
+    await FilmSchema.findByIdAndUpdate(id,fields)
+
+    return await FilmSchema.findById(id).lean()
+}
