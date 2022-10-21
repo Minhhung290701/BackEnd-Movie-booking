@@ -54,3 +54,9 @@ exports.getCinema = async id => {
 
     return cinema
 }
+
+exports.updateCinema = async (id, fields) => {
+    await CinemaSchema.findByIdAndUpdate(id, fields)
+
+    return await CinemaSchema.findById(id)
+}

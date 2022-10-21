@@ -34,6 +34,15 @@ exports.deleteArea = async ctx => {
     ctx.body = 'success'
 }
 
+exports.updateArea = async ctx => {
+    const {id} = ctx.params
+    const fields = ctx.request.body
+
+    const area = await Area.Model.updateArea(id, fields)
+
+    ctx.body = area
+}
+
 exports.addCinema = async ctx => {
     const fields = ctx.request.body
 
@@ -56,6 +65,15 @@ exports.deleteCinema = async ctx => {
     ctx.body = 'success'
 }
 
+exports.updateCinema = async ctx => {
+    const {id} = ctx.params
+    const fields = ctx.request.body
+
+    const cinema = await Cinema.Model.updateCinema(id, fields)
+
+    ctx.body = cinema
+}
+
 exports.addFilm = async ctx => {
     const fields = ctx.request.body
     fields.openingDay=new Date(fields.openingDay+"T00:00:00")
@@ -76,15 +94,39 @@ exports.deleteFilm = async ctx => {
     ctx.body = 'success'
 }
 
+exports.updateFilm = async ctx => {
+    const {id} = ctx.params
+    const fields = ctx.request.body
+
+    const film = await Film.Model.updateFilm(id, fields)
+
+    ctx.body = film
+}
+
 exports.addFilmSchedule = async ctx => {
     const fields = ctx.request.body
+    const film = await Film.Model.getFilmById(fields.filmId)
+    if(!film) {
+        throw new NotFoundError('Not found film')
+    }
+    const cinema = await Cinema.Model.getCinema(fields.cinemaId)
+    if(!cinema) {
+        throw new NotFoundError('Not found cinema')
+    }
+    if(!cinema.room.includes(parseInt(fields.room))) {
+        throw new NotFoundError('Not found room in cinema')
+    }
+
 
     const checkTime = parseInt(fields.time.slice(11,13))
     if(checkTime<8) throw new DataError("Phim chỉ được chiếu từ 8h đến 24h")
 
     fields.time = new Date(fields.time.slice(0,10)+"T"+fields.time.slice(11,17))
     fields.numEmptySeat = 80
-
+    const checkSchedule = await FilmSchedule.Model.checkExist(fields.cinemaId, fields.room, fields.time, film.durationMin)
+    if(!checkSchedule) {
+        throw new DataError('There is a movie playing in theaters during this time')
+    }
     debug.log(fields)
     let seats=[]
     for(let i=0; i < 80; i++) {

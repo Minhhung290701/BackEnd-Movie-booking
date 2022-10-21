@@ -15,6 +15,15 @@ exports.delete = {
     })
 }
 
+exports.update = {
+    params: Joi.object({
+        id:Joi.string()
+    }),
+    body: Joi.object({
+        name: Joi.string()
+    })
+}
+
 exports.addCinema = {
     body: Joi.object({
         name: Joi.string(),

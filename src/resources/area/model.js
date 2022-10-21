@@ -24,6 +24,13 @@ exports.deleteArea = async id => {
     await AreaSchema.deleteOne({_id:id})
 }
 
+exports.updateArea = async (id, fields) => {
+    debug.log(fields)
+    await AreaSchema.updateOne({_id:id}, fields)
+
+    return await AreaSchema.findById(id).lean()
+}
+
 exports.getAreas = async (limit, skip) => {
     debug.log(limit,skip)
 
