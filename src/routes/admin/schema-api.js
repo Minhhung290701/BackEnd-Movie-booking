@@ -54,6 +54,7 @@ exports.addFilm = {
         director: Joi.string(),
         actors: Joi.string(),
         description: Joi.string(),
+        genre: Joi.string(),
         openingDay: Joi.date().format('YYYY-MM-DD')
     })
 }

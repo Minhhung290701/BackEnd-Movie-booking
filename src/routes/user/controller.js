@@ -1,3 +1,10 @@
+const VNPay = require('node-vnpay')
+let vnpay = new VNPay({
+    secretKey: 'KDZYFWWFKTFUYBHMAAMJXVPFNGMDRBCQ',
+    returnUrl: 'https://www.facebook.com/',
+    merchantCode: '7ZKZXL9R',
+    hashAlgorithm: 'sha256' // optional 
+});
 const { Account, Profile } = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 const debug = Debug()
@@ -58,4 +65,18 @@ exports.login = async ctx => {
         accessToken: utils.generateAccessToken(account),
         refreshToken: utils.generateRefreshToken(account),
     }
+}
+
+
+exports.bookingWeb = async ctx => {
+    const {filmScheduleId, seats} = ctx.request.body
+    let payURL = await vnpay.genPayURL({
+        transactionRef: 'PT20200520103101_007',
+        orderInfo: 'Thanh toan hoa don dich vu',
+        orderType: '100000',
+        amount: 100000,
+        bankCode: 'NCB'
+    })
+
+    ctx.body = payURL
 }
