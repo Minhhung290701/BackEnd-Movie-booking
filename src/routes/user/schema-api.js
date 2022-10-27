@@ -42,3 +42,10 @@ exports.login = {
         password: model.password.required(),
     }),
 }
+
+exports.booking = {
+    body: Joi.object({
+        filmScheduleId:Joi.string(),
+        seat: Joi.array()
+    })
+}

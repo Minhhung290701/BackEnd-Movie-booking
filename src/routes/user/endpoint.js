@@ -12,5 +12,6 @@ router.use(auth)
 
 router.put('/profile', validate(schemas.updateProfile), ctrl.updateProfile)
 router.get('/profile', ctrl.getProfile)
+router.post('/booking/web', validate(schemas.booking), ctrl.bookingWeb)
 
 module.exports = [router]

@@ -75,6 +75,7 @@ exports.getListFilm = async ctx => {
 exports.getFilm = async ctx => {
     const {id} = ctx.params
     const film = await Film.Model.getFilmById(id)
+    debug.log(123)
 
     ctx.body = film
 }

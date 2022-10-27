@@ -16,6 +16,7 @@ const filmSchema = new Schema(
         director: mf().string().j(),
         actors: mf().string().j(),
         description: mf().string(),
+        genre: mf().string(),
         openingDay: mf().date().j(),
         totalLike: mf().number(0).j(),
     },
