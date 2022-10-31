@@ -115,6 +115,8 @@ mongodb:
     enabled: false
 
 sish-client:
+  dns_resolver:
+    enabled: false
   enabled: ${SISH_ENABLED}
   image:
     repository: kroniak/ssh-client
