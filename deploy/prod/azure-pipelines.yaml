@@ -14,6 +14,7 @@ stages:
     displayName: Deploy to K8S
     jobs:
       - job: Deploy
+        displayName: Deploy to K8s
         steps:
           - task: CmdLine@2
             displayName: Setup values.yaml & .env
