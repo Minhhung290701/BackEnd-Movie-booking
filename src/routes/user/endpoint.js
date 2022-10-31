@@ -1,4 +1,5 @@
 const Router = require('@koa/router')
+var crypto = require('crypto'); 
 const {
     validateApiSchema: validate,
     validateAccessToken: auth,
@@ -12,6 +13,7 @@ router.use(auth)
 
 router.put('/profile', validate(schemas.updateProfile), ctrl.updateProfile)
 router.get('/profile', ctrl.getProfile)
-router.post('/booking/web', validate(schemas.booking), ctrl.bookingWeb)
+//router.post('/booking', validate(schemas.booking), ctrl.bookingWeb)
+//router.get('/payment/callback')
 
 module.exports = [router]

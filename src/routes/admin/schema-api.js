@@ -55,7 +55,7 @@ exports.addFilm = {
         actors: Joi.string(),
         description: Joi.string(),
         genre: Joi.string(),
-        openingDay: Joi.date().format('YYYY-MM-DD')
+        openingDay: Joi.date()
     })
 }
 
@@ -64,7 +64,7 @@ exports.addFilmSchedule = {
         filmId: Joi.objectId(),
         cinemaId: Joi.objectId(),
         room: Joi.string(),
-        time: Joi.date().utc().format('YYYY-MM-DD HH:mm')
+        time: Joi.date()
     })
 }
 

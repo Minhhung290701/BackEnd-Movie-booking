@@ -94,7 +94,7 @@ exports.updateCinema = async ctx => {
 
 exports.addFilm = async ctx => {
     const fields = ctx.request.body
-    fields.openingDay=new Date(fields.openingDay+"T00:00:00")
+    fields.openingDay=new Date(fields.openingDay)
 
     debug.log(fields)
 
@@ -136,10 +136,10 @@ exports.addFilmSchedule = async ctx => {
     }
 
 
-    const checkTime = parseInt(fields.time.slice(11,13))
-    if(checkTime<8) throw new DataError("Phim chỉ được chiếu từ 8h đến 24h")
+    //const checkTime = parseInt(fields.time.slice(11,13))
+    //if(checkTime<8) throw new DataError("Phim chỉ được chiếu từ 8h đến 24h")
 
-    fields.time = new Date(fields.time.slice(0,10)+"T"+fields.time.slice(11,17))
+    fields.time = new Date(fields.time)
     fields.numEmptySeat = 80
     const checkSchedule = await FilmSchedule.Model.checkExist(fields.cinemaId, fields.room, fields.time, film.durationMin)
     if(!checkSchedule) {
@@ -153,6 +153,8 @@ exports.addFilmSchedule = async ctx => {
     fields.seats = seats
 
     const filmSchedule = await FilmSchedule.Model.creatFilmSchedule(fields)
+    debug.log(filmSchedule)
+    delete filmSchedule.seats
 
     ctx.body = filmSchedule
 }

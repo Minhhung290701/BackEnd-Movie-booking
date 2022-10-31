@@ -59,6 +59,18 @@ exports.getCinema = async ctx => {
     ctx.body = cinema
 }
 
+exports.getCinemas = async ctx => {
+    const limit = parseInt(ctx.query.limit || '20')
+    const skipPage = parseInt(ctx.query.skipPage || '0')
+    const skip = parseInt(skipPage || '0') * limit
+    const areaId = ctx.query.areaId
+    const {cinemas, total} = await Cinema.Model.getCinemas(limit,skip, areaId)
+
+    ctx.state.paging = utils.generatePaging(skipPage, limit, total)
+
+    ctx.body = cinemas
+}
+
 exports.getListFilm = async ctx => {
     const type = ctx.query.type
     const limit = parseInt(ctx.query.limit || '20')
