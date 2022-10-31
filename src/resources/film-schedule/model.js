@@ -25,7 +25,7 @@ exports.deleteFilmSchedule = async id => {
 exports.getFilmSchedule = async (cinemaId, filmId, date) => {
     const now = new Date()
     debug.log(cinemaId,filmId)
-    const today = new Date(date+'T00:00')
+    const today = new Date(date)
     let mili = today.getTime()
     let newlimi = mili + 172800000/2
     const tomorrow = new Date(newlimi);
