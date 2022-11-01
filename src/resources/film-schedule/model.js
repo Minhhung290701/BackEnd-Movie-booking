@@ -24,12 +24,12 @@ exports.deleteFilmSchedule = async id => {
 
 exports.getFilmSchedule = async (cinemaId, filmId, date) => {
     const now = new Date()
-    debug.log(cinemaId,filmId)
+    //debug.log(cinemaId,filmId)
     const today = new Date(date)
     let mili = today.getTime()
     let newlimi = mili + 172800000/2
     const tomorrow = new Date(newlimi);
-    debug.log(tomorrow)
+    //debug.log(tomorrow)
 
     let search = {}
 
@@ -44,9 +44,9 @@ exports.getFilmSchedule = async (cinemaId, filmId, date) => {
     if(filmId) search.filmId = filmId
 
     
-    debug.log(search)
+    //debug.log(search)
     const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
-    debug.log(filmSchedules)
+    //debug.log(filmSchedules)
 
     return filmSchedules
 }
@@ -66,22 +66,23 @@ exports.checkExist = async (cinemaId, room,time, min) => {
         return false
     }
 
+    //debug.log('Check2')
     let check2 = true
     const filmSchedules = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
         room:room,
         time: {
-            $gte: new Date(time.getTime()-200*60000)
+            $lte: new Date(time.getTime()-200*60000)
         }
     }).lean()
-    debug.log(filmSchedules)
+    //debug.log(filmSchedules)
 
 
     await Promise.all(
         await filmSchedules.map(async (filmSchedule)=>{
             const film = await Film.Model.getFilmById(filmSchedule.filmId)
-            debug.log(time, new Date(filmSchedule.time.getTime()+film.durationMin*60000))
-            debug.log(time.getTime(),filmSchedule.time.getTime()+(film.durationMin+10)*60000, film.durationMin)
+            //debug.log(time, new Date(filmSchedule.time.getTime()+film.durationMin*60000))
+            //debug.log(time.getTime(),filmSchedule.time.getTime()+(film.durationMin+10)*60000, film.durationMin)
 
             if(time.getTime() < filmSchedule.time.getTime()+(film.durationMin+10)*60000) {
                 check2 = false
@@ -89,8 +90,26 @@ exports.checkExist = async (cinemaId, room,time, min) => {
         })
     )
 
-    debug.log(check2)
+    //debug.log(check2)
 
 
     return check2
+}
+
+
+exports.checkExistInDate = async (filmId, time) => {
+    const check = await FilmScheduleSchema.find({
+        filmId:filmId.toString(),
+        time: {
+            $gte: time,
+            $lte: new Date(time.getTime()+86400000)
+        }
+    }).lean()
+
+    //debug.log(filmId,time,check)
+
+    if(check.length>0) {
+        return true
+    }
+    return false
 }

@@ -54,3 +54,7 @@ exports.getFilmSchedule = {
         date: Joi.string()
     })
 }
+
+exports.getTime = {
+    params: Joi.object({ id }),
+}

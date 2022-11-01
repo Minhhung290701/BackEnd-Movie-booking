@@ -1,5 +1,6 @@
 const { Area, Cinema, Film, FilmSchedule, Banner} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
+const { forInRight } = require('lodash')
 
 const debug = Debug()
 const {
@@ -109,4 +110,45 @@ exports.getFilmSchedule = async ctx => {
 
     ctx.body = filmSchedules
 
+}
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+  
+  function formatDate(date) {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('/');
+  }
+
+exports.getTime = async ctx => {
+    const {id} = ctx.params
+    const film = await Film.Model.getFilmById(id)
+
+    const now = formatDate(new Date())
+    let today =  new Date(now)
+    mili = today.getTime()+3600000*7
+    const milis = [mili]
+    for (let i = 1; i< 6 ; i++) {
+        milis.push(mili+i*86400000)
+    }
+    
+    let times = []
+
+    await Promise.all(
+        milis.map(async mi=> {
+            const date = new Date(mi)
+            const check = await FilmSchedule.Model.checkExistInDate(film._id, date)
+
+            if(check) {
+                times.push(date)
+            }
+        })
+    )
+
+
+    ctx.body = times
 }
