@@ -24,6 +24,7 @@ router.get('/film/get-film/:id', validate(schemas.getFilm), ctrl.getFilm)
 
 router.get('/film-schedule/get-film-schedules', validate(schemas.getFilmSchedule), ctrl.getFilmSchedule)
 
+router.get('/time/:id', validate(schemas.getTime), ctrl.getTime)
 
 
 module.exports = [router]
