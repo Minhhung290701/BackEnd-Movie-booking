@@ -18,29 +18,37 @@ env:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+    name: Build and push Docker image
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+      tag: ${{ steps.tags.outputs.value }}    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Get tags
-        id: tags
-        run: |
-          TAGS=${GITHUB_SHA::8}
-          echo "::set-output name=tag::$(echo $TAGS)"
-        shell: bash
-
+  
       - name: Login docker
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
+      - name: Get tags
+        id: tags
+        run: |
+          TAGS=${GITHUB_SHA::8}
+          echo $TAGS
+          echo "::set-output name=value::$(echo $TAGS)"
+        shell: bash
+
+      - name: Check if docker image existed
+        id: existed
+        run: docker manifest inspect ${{ env.image_repository }}:${{ steps.tags.outputs.value }}
+        continue-on-error: true
+      
+      - name: Set up Docker Buildx
+        if: steps.existed.outcome == 'failure'
+        uses: docker/setup-buildx-action@v2
+
       - name: Build and push
+        if: steps.existed.outcome == 'failure'
         uses: docker/build-push-action@v3
         with:
           context: .
