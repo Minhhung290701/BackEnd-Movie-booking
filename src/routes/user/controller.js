@@ -3,17 +3,6 @@ const moment = require('moment-timezone');
 const {promisify} = require('util');
 const getIP = promisify(require('external-ip')());
 
-const VNPay = require('node-vnpay')
-let vnpay = new VNPay({
-    secretKey: VNP_HASHSECRET,
-    returnUrl: VNP_RETURNURL,
-    merchantCode: VNP_TMNCODE,
-    hashAlgorithm: 'sha256' // optional 
-});
-
-const querystring = require('qs');
-const crypto = require('crypto');  
-
 const { Account, Profile } = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 const debug = Debug()
@@ -76,66 +65,61 @@ exports.login = async ctx => {
     }
 }
 
-/* 
-exports.bookingWeb = async ctx => {
-    const {filmScheduleId, seats, amount, bankCode, orderType} = ctx.request.body
-    let ipAddr = await getIP()
-    debug.log(ipAddr)
 
+exports.booking = async ctx => {
+    const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
+    let ipAddr = await getIP()
+
+    //const dateFormat = require('dateformat');
     let orderId = filmScheduleId    
 
+    var vnp_Params = {};
 
-    let vnp_Params = {};
-    vnp_Params['vnp_Version'] = '2.1.0';//
-    vnp_Params['vnp_Command'] = 'pay';//s
-    vnp_Params['vnp_TmnCode'] = VNP_TMNCODE;//
+
+    vnp_Params['vnp_Version'] = '2';
+    vnp_Params['vnp_Command'] = 'pay';
+    vnp_Params['vnp_TmnCode'] = VNP_TMNCODE;
     // vnp_Params['vnp_Merchant'] = ''
-    vnp_Params['vnp_Locale'] = 'vn';//
-    vnp_Params['vnp_CurrCode'] = 'VND';//   
-    vnp_Params['vnp_TxnRef'] = orderId;//
-    vnp_Params['vnp_OrderInfo'] = 'Thanh toan hoa don';//
-    vnp_Params['vnp_OrderType'] = 'topup';//
-    vnp_Params['vnp_Amount'] = amount*100;//
-    vnp_Params['vnp_ReturnUrl'] = VNP_RETURNURL;//
-    vnp_Params['vnp_IpAddr'] = ipAddr;//
-    vnp_Params['vnp_CreateDate'] = parseInt(moment().tz('Asia/Ho_Chi_Minh').format('YYYYMMDDHHmmss'));//
+    vnp_Params['vnp_Locale'] = 'vn';
+    vnp_Params['vnp_CurrCode'] = 'VND';
+    vnp_Params['vnp_TxnRef'] = orderId;
+    vnp_Params['vnp_OrderInfo'] = 'Thanh toan hoa don';;
+    vnp_Params['vnp_OrderType'] = 'topup';
+    vnp_Params['vnp_Amount'] = amount * 100;
+    vnp_Params['vnp_ReturnUrl'] = VNP_RETURNURL;
+    vnp_Params['vnp_IpAddr'] = ipAddr;
+    vnp_Params['vnp_CreateDate'] = parseInt(moment().tz('Asia/Ho_Chi_Minh').format('YYYYMMDDHHmmss')).toString();
     if(bankCode !== null && bankCode !== ''){
         vnp_Params['vnp_BankCode'] = bankCode;
     }
 
 
     vnp_Params = this.sortObject(vnp_Params);
-
-     var querystring = require('qs');
-        var signData = querystring.stringify(vnp_Params, { encode: false });
-        var crypto = require("crypto");     
-        var hmac = crypto.createHmac("sha512", VNP_HASHSECRET);
-        var signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
-        vnp_Params['vnp_SecureHash'] = signed;
+    debug.log(vnp_Params)
 
 
+    var querystring = require('qs');
+    delete vnp_Params.level
+    delete vnp_Params.timestamp
+    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
+    debug.log(signData)
+    var sha256 = require('sha256');
 
-        //vnp_Params = sortObject(vnp_Params);
+    var secureHash = sha256(signData);
+    debug.log(secureHash)
 
-        var querystring = require('qs');
-        var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params, { encode: false });
+    vnp_Params['vnp_SecureHashType'] =  'SHA256';
+    vnp_Params['vnp_SecureHash'] = secureHash;
 
-        var crypto = require("crypto");     
-        var hmac = crypto.createHmac("sha512", signData);
-    
-        //var sha512 = require('sha512');
-    
-        //var secureHash = sha512(signData);
-    
-        vnp_Params['vnp_SecureHashType'] =  'sha512';
-        vnp_Params['vnp_SecureHash'] = hmac;
-        //vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: true });
-        let vnpUrl = VNP_URL + '?' + querystring.stringify(vnp_Params, { encode: true });
+    let vnpUrl = VNP_URL + '?' + querystring.stringify(vnp_Params, { encode: true }); 
+    debug.log(querystring.stringify(vnp_Params, { encode: true }))
+
+    debug.log(vnpUrl)
 
     ctx.body = vnpUrl
 }
 
-exports.sortObject= (o) => {
+exports.sortObject = (o) => {
     var sorted = {},
         key, a = [];
 
@@ -152,4 +136,3 @@ exports.sortObject= (o) => {
     }
     return sorted;
 }
- */
