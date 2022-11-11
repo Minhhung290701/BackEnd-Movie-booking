@@ -136,3 +136,34 @@ exports.sortObject = (o) => {
     }
     return sorted;
 }
+
+
+exports.vnpReturn = ctx => {
+    var vnp_Params = ctx.query;
+    var secureHash = vnp_Params['vnp_SecureHash'];
+    
+    delete vnp_Params['vnp_SecureHash'];
+    delete vnp_Params['vnp_SecureHashType'];
+    vnp_Params = this.sortObject(vnp_Params);
+
+    var querystring = require('qs');
+    delete vnp_Params.level
+    delete vnp_Params.timestamp
+    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
+
+    var sha256 = require('sha256');
+
+    var signed = sha256(signData);
+
+    if(secureHash === signed){
+        var orderId = vnp_Params['vnp_TxnRef'];
+        var rspCode = vnp_Params['vnp_ResponseCode'];
+        //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
+        ctx.body = 'success'
+    }
+    else {
+        ctx.body = 'faild'
+    }
+
+
+}
