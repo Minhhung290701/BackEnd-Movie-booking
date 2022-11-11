@@ -1,6 +1,6 @@
 const { Area, Cinema, Film, FilmSchedule, Banner} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
-const { forInRight } = require('lodash')
+const {VNP_TMNCODE, VNP_HASHSECRET, VNP_URL, VNP_RETURNURL} = process.env
 
 const debug = Debug()
 const {
@@ -130,7 +130,7 @@ exports.getTime = async ctx => {
 
     const now = formatDate(new Date())
     let today =  new Date(now)
-    mili = today.getTime()+3600000*7
+    mili = today.getTime()
     const milis = [mili]
     for (let i = 1; i< 6 ; i++) {
         milis.push(mili+i*86400000)
@@ -151,4 +151,53 @@ exports.getTime = async ctx => {
 
 
     ctx.body = times
+}
+
+
+exports.vnpReturn = ctx => {
+    var vnp_Params = ctx.query;
+    var secureHash = vnp_Params['vnp_SecureHash'];
+    debug.log(vnp_Params)
+    
+    delete vnp_Params['vnp_SecureHash'];
+    delete vnp_Params['vnp_SecureHashType'];
+    //vnp_Params = this.sortObject(vnp_Params);
+
+    var querystring = require('qs');
+    delete vnp_Params.level
+    delete vnp_Params.timestamp
+    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
+
+    var sha256 = require('sha256');
+
+    var signed = sha256(signData);
+    debug.log(signed)
+
+    if(secureHash === signed){
+        var orderId = vnp_Params['vnp_TxnRef'];
+        var rspCode = vnp_Params['vnp_ResponseCode'];
+        //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
+        ctx.body = 'success'
+    }
+    else {
+        ctx.body = 'faild'
+    }
+}
+
+exports.sortObject = (o) => {
+    var sorted = {},
+        key, a = [];
+
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+            a.push(key);
+        }
+    }
+
+    a.sort();
+
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+    }
+    return sorted;
 }

@@ -26,5 +26,7 @@ router.get('/film-schedule/get-film-schedules', validate(schemas.getFilmSchedule
 
 router.get('/time/:id', validate(schemas.getTime), ctrl.getTime)
 
+router.get('/vnpay_return', ctrl.vnpReturn)
+
 
 module.exports = [router]
