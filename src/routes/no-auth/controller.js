@@ -130,23 +130,15 @@ exports.getTime = async ctx => {
 
     const now = formatDate(new Date())
     let today =  new Date(now)
+    let times=[]
     mili = today.getTime()
-    const milis = [mili]
-    for (let i = 1; i< 6 ; i++) {
-        milis.push(mili+i*86400000)
+    for (let i = 0; i< 6 ; i++) {
+        const date = new Date(mili+i*86400000)
+        const check = await FilmSchedule.Model.checkExistInDate(film._id, date)
+        if(check) {
+            times.push(date)
+        }
     }
-    
-    let times = []
-    await milis.map(async mi=> {
-            const date = new Date(mi)
-            const check = await FilmSchedule.Model.checkExistInDate(film._id, date)
-
-            if(check) {
-                times.push(date)
-            }
-        })
-
-
 
     ctx.body = times
 }
