@@ -137,9 +137,7 @@ exports.getTime = async ctx => {
     }
     
     let times = []
-
-    await Promise.all(
-        milis.map(async mi=> {
+    await milis.map(async mi=> {
             const date = new Date(mi)
             const check = await FilmSchedule.Model.checkExistInDate(film._id, date)
 
@@ -147,7 +145,7 @@ exports.getTime = async ctx => {
                 times.push(date)
             }
         })
-    )
+
 
 
     ctx.body = times
