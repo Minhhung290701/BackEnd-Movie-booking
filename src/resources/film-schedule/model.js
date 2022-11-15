@@ -7,6 +7,7 @@ const debug = require('../../libs/debug')()
 const FilmScheduleSchema = require('./schema-mg')
 const { required } = require('joi')
 const Film = require('../film')
+const { Cinema } = require('..')
 
 
 exports.creatFilmSchedule = async fields => {
@@ -22,14 +23,12 @@ exports.deleteFilmSchedule = async id => {
 }
 
 
-exports.getFilmSchedule = async (cinemaId, filmId, date) => {
+exports.getFilmSchedule = async (filmId, date) => {
     const now = new Date()
-    //debug.log(cinemaId,filmId)
     const today = new Date(date)
     let mili = today.getTime()
     let newlimi = mili + 172800000/2
     const tomorrow = new Date(newlimi);
-    //debug.log(tomorrow)
 
     let search = {}
 
@@ -39,23 +38,58 @@ exports.getFilmSchedule = async (cinemaId, filmId, date) => {
         $gte: begin,
         $lte: tomorrow
     }
-
-    if(cinemaId) search.cinemaId = cinemaId
     if(filmId) search.filmId = filmId
 
-    
-    //debug.log(search)
     const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
-    //debug.log(filmSchedules)
+    let data = {}
 
-    return filmSchedules
+    await Promise.all(
+        await filmSchedules.map(async filmSchedule => {
+            const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
+            delete filmSchedule.seats
+            delete filmSchedule.createdAt
+            delete filmSchedule.updatedAt
+            delete filmSchedule.__v
+            delete filmSchedule.filmId
+            delete filmSchedule.cinemaId
+            delete filmSchedule.room
+            let key = cinema.name
+            
+            if(!data.hasOwnProperty(key)) {
+                data[key]=[filmSchedule]
+            }
+            else{
+                data[key].push(filmSchedule)
+            }
+        })
+    )
+    data = this.sortObject(data)
+
+    return data
 }
 
+exports.sortObject = (o) => {
+    var sorted = {},
+        key, a = [];
 
-exports.checkExist = async (cinemaId, room,time, min) => {
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+            a.push(key);
+        }
+    }
+
+    a.sort();
+
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+    }
+    return sorted;
+}
+
+exports.checkExist = async (cinemaId,time, min) => {
     const check = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        room:room,
+        //room:room,
         time: {
             $gte: time,
             $lte: new Date(time.getTime()+min*60000)
@@ -70,7 +104,7 @@ exports.checkExist = async (cinemaId, room,time, min) => {
     let check2 = true
     const filmSchedules = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        room:room,
+        //room:room,
         time: {
             $lte: new Date(time.getTime()-200*60000)
         }
@@ -89,8 +123,6 @@ exports.checkExist = async (cinemaId, room,time, min) => {
             }
         })
     )
-
-    //debug.log(check2)
 
 
     return check2

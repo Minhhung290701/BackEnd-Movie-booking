@@ -93,28 +93,18 @@ exports.booking = async ctx => {
         vnp_Params['vnp_BankCode'] = bankCode;
     }
 
-
     vnp_Params = this.sortObject(vnp_Params);
-    debug.log(vnp_Params)
-
 
     var querystring = require('qs');
     delete vnp_Params.level
     delete vnp_Params.timestamp
-    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
-    debug.log(signData)
-    var sha256 = require('sha256');
 
-    var secureHash = sha256(signData);
-    debug.log(secureHash)
-
-    vnp_Params['vnp_SecureHashType'] =  'SHA256';
-    vnp_Params['vnp_SecureHash'] = secureHash;
-
-    let vnpUrl = VNP_URL + '?' + querystring.stringify(vnp_Params, { encode: true }); 
-    debug.log(querystring.stringify(vnp_Params, { encode: true }))
-
-    debug.log(vnpUrl)
+    var signData = querystring.stringify(vnp_Params, { encode: false });
+    var crypto = require("crypto");     
+    var hmac = crypto.createHmac("sha512", VNP_HASHSECRET);
+    var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex"); 
+    vnp_Params['vnp_SecureHash'] = signed;
+    let vnpUrl = VNP_URL + '?' + querystring.stringify(vnp_Params, { encode: true });
 
     ctx.body = vnpUrl
 }
@@ -137,23 +127,54 @@ exports.sortObject = (o) => {
     return sorted;
 }
 
-
 exports.vnpReturn = ctx => {
     var vnp_Params = ctx.query;
+    debug.log(vnp_Params)
     var secureHash = vnp_Params['vnp_SecureHash'];
     
     delete vnp_Params['vnp_SecureHash'];
     delete vnp_Params['vnp_SecureHashType'];
-    vnp_Params = this.sortObject(vnp_Params);
+
+    //vnp_Params = this.sortObject(vnp_Params);
+
 
     var querystring = require('qs');
     delete vnp_Params.level
     delete vnp_Params.timestamp
-    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
+    var signData = querystring.stringify(vnp_Params, { encode: false });
+    debug.log(signData)
+    var crypto = require("crypto");     
+    var hmac = crypto.createHmac("sha512", VNP_HASHSECRET);
+    var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex");     
+    debug.log(signed)
 
-    var sha256 = require('sha256');
+    if(secureHash === signed){
+        var orderId = vnp_Params['vnp_TxnRef'];
+        var rspCode = vnp_Params['vnp_ResponseCode'];
+        //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
+        ctx.body = 'success'
+    }
+    else {
+        ctx.body = 'faild'
+    }
+}
 
-    var signed = sha256(signData);
+
+exports.vnpIpn = ctx => {
+    var vnp_Params = ctx.query;
+    debug.log(vnp_Params)
+    var secureHash = vnp_Params['vnp_SecureHash'];
+    
+    delete vnp_Params['vnp_SecureHash'];
+    delete vnp_Params['vnp_SecureHashType'];
+    //vnp_Params = this.sortObject(vnp_Params);
+
+
+    var querystring = require('qs');
+    var signData = querystring.stringify(vnp_Params, { encode: false });
+    var crypto = require("crypto");     
+    var hmac = crypto.createHmac("sha512", VNP_HASHSECRET);
+    var signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
 
     if(secureHash === signed){
         var orderId = vnp_Params['vnp_TxnRef'];

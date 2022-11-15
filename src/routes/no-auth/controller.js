@@ -97,18 +97,18 @@ exports.getFilm = async ctx => {
 exports.getFilmSchedule = async ctx => {
     const {cinemaId, filmId, date} = ctx.query
     debug.log(cinemaId,filmId)
-    const filmSchedules = await FilmSchedule.Model.getFilmSchedule(cinemaId, filmId, date)
+    let data = await FilmSchedule.Model.getFilmSchedule(filmId, date)
 
-    await Promise.all(
+/*     await Promise.all(
         filmSchedules.map(async filmSchedule => {
             delete filmSchedule.seats
             delete filmSchedule.createdAt
             delete filmSchedule.updatedAt
             delete filmSchedule.__v
         })
-    )
+    ) */
 
-    ctx.body = filmSchedules
+    ctx.body = data
 
 }
 
@@ -141,53 +141,4 @@ exports.getTime = async ctx => {
     }
 
     ctx.body = times
-}
-
-
-exports.vnpReturn = ctx => {
-    var vnp_Params = ctx.query;
-    var secureHash = vnp_Params['vnp_SecureHash'];
-    debug.log(vnp_Params)
-    
-    delete vnp_Params['vnp_SecureHash'];
-    delete vnp_Params['vnp_SecureHashType'];
-    //vnp_Params = this.sortObject(vnp_Params);
-
-    var querystring = require('qs');
-    delete vnp_Params.level
-    delete vnp_Params.timestamp
-    var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params,{encode:false})
-
-    var sha256 = require('sha256');
-
-    var signed = sha256(signData);
-    debug.log(signed)
-
-    if(secureHash === signed){
-        var orderId = vnp_Params['vnp_TxnRef'];
-        var rspCode = vnp_Params['vnp_ResponseCode'];
-        //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
-        ctx.body = 'success'
-    }
-    else {
-        ctx.body = 'faild'
-    }
-}
-
-exports.sortObject = (o) => {
-    var sorted = {},
-        key, a = [];
-
-    for (key in o) {
-        if (o.hasOwnProperty(key)) {
-            a.push(key);
-        }
-    }
-
-    a.sort();
-
-    for (key = 0; key < a.length; key++) {
-        sorted[a[key]] = o[a[key]];
-    }
-    return sorted;
 }
