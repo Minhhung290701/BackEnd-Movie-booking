@@ -23,7 +23,21 @@ exports.deleteFilmSchedule = async id => {
 }
 
 
-exports.getFilmSchedule = async (filmId, date) => {
+exports.getFilmSchedule = async (areaId, filmId, date) => {
+
+    if(areaId) {
+        var cinemas = await Cinema.Model.getCinemas(100,0,areaId)
+        debug.log(cinemas)
+    }
+    //debug.log(cinemas)
+    if(cinemas){
+        var cinemasId=[]
+        await Promise.all(
+            cinemas.cinemas.map(async cinema => {
+                cinemasId.push(cinema._id.toString())
+            })
+        )
+    }
     const now = new Date()
     const today = new Date(date)
     let mili = today.getTime()
@@ -43,26 +57,40 @@ exports.getFilmSchedule = async (filmId, date) => {
     const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
     let data = {}
 
-    await Promise.all(
-        await filmSchedules.map(async filmSchedule => {
+    for(filmSchedule of filmSchedules){
+        //await filmSchedules.map(async filmSchedule => {
+            //debug.log(filmSchedule)
             const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
-            delete filmSchedule.seats
+            //debug.log(cinema)
+            //delete filmSchedule.seats
             delete filmSchedule.createdAt
             delete filmSchedule.updatedAt
             delete filmSchedule.__v
-            delete filmSchedule.filmId
-            delete filmSchedule.cinemaId
-            delete filmSchedule.room
+            //delete filmSchedule.filmId
+            //delete filmSchedule.cinemaId
+            //delete filmSchedule.room
+
             let key = cinema.name
-            
-            if(!data.hasOwnProperty(key)) {
-                data[key]=[filmSchedule]
+            let keyId = cinema._id.toString()
+            if(cinemasId) {
+                if(!data.hasOwnProperty(key) && cinemasId.includes(keyId)) {
+                    data[key]=[filmSchedule]
+                }
+                else{
+                    if(cinemasId.includes(keyId)) {
+                        data[key].push(filmSchedule)
+                    }
+                }
             }
-            else{
-                data[key].push(filmSchedule)
+            else {
+                if(!data.hasOwnProperty(key) ) {
+                    data[key]=[filmSchedule]
+                }
+                else{
+                    data[key].push(filmSchedule)
+                }
             }
-        })
-    )
+        }
     data = this.sortObject(data)
 
     return data
