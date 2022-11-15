@@ -141,7 +141,7 @@ exports.addFilmSchedule = async ctx => {
 
     fields.time = new Date(fields.time)
     fields.numEmptySeat = 80
-    const checkSchedule = await FilmSchedule.Model.checkExist(fields.cinemaId, fields.time, film.durationMin)
+    const checkSchedule = await FilmSchedule.Model.checkExist(fields.filmId, fields.cinemaId, fields.room, fields.time, film.durationMin)
     if(!checkSchedule) {
         throw new DataError('There is a movie playing in theaters during this time')
     }

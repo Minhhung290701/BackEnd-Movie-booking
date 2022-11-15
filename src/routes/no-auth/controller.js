@@ -111,6 +111,22 @@ exports.getFilmSchedule = async ctx => {
     ctx.body = data
 }
 
+exports.getFilmScheduleByCinemaId = async ctx => {
+    const {cinemaId, date} = ctx.query
+
+    let data = await FilmSchedule.Model.getFilmScheduleByCinemaId(cinemaId, date)
+
+    let dataFormat = []
+
+    for(var filmId in data ) {
+        const film = await Film.Model.getFilmById(filmId)
+        film.schedules = data[filmId]
+        dataFormat.push(film)
+    }
+
+    ctx.body = dataFormat
+}
+
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
   }

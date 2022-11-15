@@ -96,6 +96,51 @@ exports.getFilmSchedule = async (areaId, filmId, date) => {
     return data
 }
 
+exports.getFilmScheduleByCinemaId = async (cinemaId, date) => {
+    const now = new Date()
+    const today = new Date(date)
+    let mili = today.getTime()
+    let newlimi = mili + 172800000/2
+    const tomorrow = new Date(newlimi);
+
+    let search = {
+        cinemaId:cinemaId
+    }
+
+    let begin = (today.getTime() < now.getTime())? now:today
+
+    search.time = {
+        $gte: begin,
+        $lte: tomorrow
+    }
+
+    const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
+    debug.log(filmSchedules)
+    
+    let data = {}
+    let keys = []
+
+    for(filmSchedule of filmSchedules){
+            //const film = await Film.Model.getFilmById(filmSchedule.filmId)
+            //debug.log(film)
+            delete filmSchedule.createdAt
+            delete filmSchedule.updatedAt
+            delete filmSchedule.__v
+
+            let keyId = filmSchedule.filmId
+
+            if(!data.hasOwnProperty(keyId)) {
+                data[keyId]=[filmSchedule]
+            }
+            else{
+                data[keyId].push(filmSchedule)
+            }
+    }
+
+    return data
+}
+
+
 exports.sortObject = (o) => {
     var sorted = {},
         key, a = [];
@@ -114,10 +159,20 @@ exports.sortObject = (o) => {
     return sorted;
 }
 
-exports.checkExist = async (cinemaId,time, min) => {
+exports.checkExist = async (filmId, cinemaId, room, time, min) => {
+    const checkDupilcateTime = await FilmScheduleSchema.find({
+        cinemaId:cinemaId,
+        filmId:filmId,
+        time: time
+    }).lean()
+
+    if(checkDupilcateTime.length>0) {
+        return false
+    }
+
     const check = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        //room:room,
+        room:room,
         time: {
             $gte: time,
             $lte: new Date(time.getTime()+min*60000)
@@ -132,7 +187,7 @@ exports.checkExist = async (cinemaId,time, min) => {
     let check2 = true
     const filmSchedules = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        //room:room,
+        room:room,
         time: {
             $lte: new Date(time.getTime()-200*60000)
         }
