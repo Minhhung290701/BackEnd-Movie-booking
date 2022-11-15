@@ -95,9 +95,9 @@ exports.getFilm = async ctx => {
 
 
 exports.getFilmSchedule = async ctx => {
-    const {cinemaId, filmId, date} = ctx.query
+    const {areaId, cinemaId, filmId, date} = ctx.query
     debug.log(cinemaId,filmId)
-    let data = await FilmSchedule.Model.getFilmSchedule(filmId, date)
+    let data = await FilmSchedule.Model.getFilmSchedule(areaId,filmId, date)
 
 /*     await Promise.all(
         filmSchedules.map(async filmSchedule => {
@@ -109,7 +109,6 @@ exports.getFilmSchedule = async ctx => {
     ) */
 
     ctx.body = data
-
 }
 
 function padTo2Digits(num) {

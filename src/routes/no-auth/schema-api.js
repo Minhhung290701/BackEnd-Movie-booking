@@ -50,6 +50,7 @@ exports.getCinema = {
 exports.getFilmSchedule = {
     query: Joi.object({
         cinemaId: id,
+        areaId: id,
         filmId:id,
         date: Joi.string()
     })

@@ -48,9 +48,9 @@ exports.getCinemasByAreaId = async areaId => {
 }
 
 exports.getCinema = async id => {
-    debug.log(12345)
+    //debug.log(12345)
     const cinema = await CinemaSchema.findById(id).lean()
-    debug.log(cinema)
+    //debug.log(cinema)
 
     return cinema
 }
