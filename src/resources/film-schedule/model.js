@@ -114,10 +114,20 @@ exports.sortObject = (o) => {
     return sorted;
 }
 
-exports.checkExist = async (cinemaId,time, min) => {
+exports.checkExist = async (filmId, cinemaId, room, time, min) => {
+    const checkDupilcateTime = await FilmScheduleSchema.find({
+        cinemaId:cinemaId,
+        filmId:filmId,
+        time: time
+    }).lean()
+
+    if(checkDupilcateTime.length>0) {
+        return false
+    }
+
     const check = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        //room:room,
+        room:room,
         time: {
             $gte: time,
             $lte: new Date(time.getTime()+min*60000)
@@ -132,7 +142,7 @@ exports.checkExist = async (cinemaId,time, min) => {
     let check2 = true
     const filmSchedules = await FilmScheduleSchema.find({
         cinemaId:cinemaId,
-        //room:room,
+        room:room,
         time: {
             $lte: new Date(time.getTime()-200*60000)
         }
