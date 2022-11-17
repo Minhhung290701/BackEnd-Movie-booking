@@ -71,8 +71,10 @@ exports.booking = async ctx => {
     const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
 
     const filmSchedule = await FilmSchedule.Model.getFilmScheduleByCinemaId(filmScheduleId)
+    debug.log(filmSchedule)
 
-    if(!filmSchedule) {
+
+    if(!filmSchedule || !filmSchedule?._id) {
         throw new NotFoundError('Not found filmSchedule')
     }
 
