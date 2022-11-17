@@ -70,7 +70,7 @@ exports.booking = async ctx => {
     const {profile} = ctx.state
     const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
 
-    const filmSchedule = await FilmSchedule.Model.getFilmScheduleByCinemaId(filmScheduleId)
+    const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(filmScheduleId)
     debug.log(filmSchedule)
 
 
