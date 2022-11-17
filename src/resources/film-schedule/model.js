@@ -228,3 +228,25 @@ exports.checkExistInDate = async (filmId, time) => {
     }
     return false
 }
+
+
+exports.getFilmScheduleById = async id => {
+    const filmSchedule = await FilmScheduleSchema.findById(id).lean()
+
+    return filmSchedule
+}
+
+exports.bookingSuccess = async (id, seats) => {
+    const filmSchedule = await FilmScheduleSchema.findById(id).lean()
+    const newSeats = filmSchedule.seats
+
+    for (let x of seats) {
+        newSeats[x-1].isBooked = true
+    }
+
+    const newNumEmptySeat = filmSchedule.newNumEmptySeat - seats.length
+
+    await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats, newNumEmptySeat: newNumEmptySeat})
+
+    return 'success'
+}

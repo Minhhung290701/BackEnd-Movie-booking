@@ -53,3 +53,12 @@ exports.deleteUndeleteUser = async id => {
     }
     return 'success'
 }
+
+exports.bookingSuccess = async (profileId, amount) => {
+    const profile = await ProfileSchema.findById(profileId)
+    let newPay = profile.totalPay + amount
+
+    await ProfileSchema.findByIdAndUpdate(profile, {totalPay: newPay})
+
+    return 'success'
+}

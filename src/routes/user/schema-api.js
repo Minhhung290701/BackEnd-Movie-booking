@@ -46,7 +46,15 @@ exports.login = {
 exports.booking = {
     body: Joi.object({
         filmScheduleId:Joi.string(),
-        seat: Joi.array(),
+        seats: Joi.array(),
         amount: Joi.number()
+    })
+}
+
+
+exports.getTickets = {
+    query: Joi.object({
+        limit: Joi.number(),
+        skipPage: Joi.number()
     })
 }
