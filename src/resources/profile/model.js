@@ -58,7 +58,15 @@ exports.bookingSuccess = async (profileId, amount) => {
     const profile = await ProfileSchema.findById(profileId)
     let newPay = profile.totalPay + amount
 
-    await ProfileSchema.findByIdAndUpdate(profile, {totalPay: newPay})
+    fields = {
+        totalPay: newPay
+    }
+
+    if(newPay >= 10000000) {
+        fields.memberClass = 'vip'
+    }
+
+    await ProfileSchema.findByIdAndUpdate(profile, fields)
 
     return 'success'
 }

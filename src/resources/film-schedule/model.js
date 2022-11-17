@@ -244,9 +244,9 @@ exports.bookingSuccess = async (id, seats) => {
         newSeats[x-1].isBooked = true
     }
 
-    const newNumEmptySeat = filmSchedule.newNumEmptySeat - seats.length
+    const newNumEmptySeat = filmSchedule.numEmptySeat - seats.length
 
-    await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats, newNumEmptySeat: newNumEmptySeat})
+    await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats, numEmptySeat: newNumEmptySeat})
 
     return 'success'
 }
