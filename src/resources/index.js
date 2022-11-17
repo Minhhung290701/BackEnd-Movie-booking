@@ -12,3 +12,5 @@ exports.Film = require('./film')
 exports.FilmSchedule = require('./film-schedule')
 
 exports.Banner = require('./banner')
+
+exports.Ticket = require('./ticket')

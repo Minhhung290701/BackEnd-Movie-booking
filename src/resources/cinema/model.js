@@ -6,7 +6,6 @@ const debug = require('../../libs/debug')()
 var mongoose = require('mongoose');
 
 const CinemaSchema = require('./schema-mg')
-const { populate } = require('./schema-mg')
 
 exports.creatCinema = async fields => {
     const cinema = await CinemaSchema.create(fields)
