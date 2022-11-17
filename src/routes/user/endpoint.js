@@ -16,6 +16,7 @@ router.get('/profile', auth, ctrl.getProfile)
 router.post('/booking', auth, validate(schemas.booking), ctrl.booking)
 router.get('/vnpay_return',ctrl.vnpReturn)
 router.get('/vnp_ipn', ctrl.vnpIpn)
+router.get('/tickets',auth, validate(schemas.getTickets), ctrl.getTickets)
 
 
 module.exports = [router]

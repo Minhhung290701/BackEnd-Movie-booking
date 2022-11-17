@@ -3,7 +3,7 @@ const moment = require('moment-timezone');
 const {promisify} = require('util');
 const getIP = promisify(require('external-ip')());
 
-const { Account, Profile, FilmSchedule , Ticket} = require('../../resources')
+const { Account, Profile, FilmSchedule , Ticket, Film, Cinema} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs');
 const debug = Debug()
 const {
@@ -208,10 +208,10 @@ exports.vnpIpn = async ctx => {
         var ticketId = vnp_Params['vnp_TxnRef'];
         const ticket = await Ticket.Model.findById(ticketId)
         var rspCode = vnp_Params['vnp_ResponseCode'];
-        await Ticket.Model.bookingSuccess(ticketId,rspCode)
+        await Ticket.Model.responseBooking(ticketId,rspCode)
         if(rspCode == '00') {
             await Profile.Model.bookingSuccess( ticket.profileId,ticket.amount)
-            await FilmSchedule.bookingSuccess(ticket.filmScheduleId,ticket.seats )
+            await FilmSchedule.Model.bookingSuccess(ticket.filmScheduleId,ticket.seats )
         }
         ctx.body = 'done'
     }
@@ -264,3 +264,42 @@ exports.vnpReturn = async ctx => {
 }
 
 
+
+
+exports.getTickets = async ctx => {
+    const {profile} = ctx.state
+    const limit = parseInt(ctx.query.limit || '20')
+    const skipPage = parseInt(ctx.query.skipPage || '0')
+    const skip = parseInt(skipPage || '0') * limit
+
+    const {tickets, total} = await Ticket.Model.getTickets(profile._id,limit,skip)
+
+    let infoTickets = []
+
+    for(let ticket of tickets) {
+        const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(ticket.filmScheduleId)
+        const film = await Film.Model.getFilmById(filmSchedule.filmId)
+        const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
+
+        infoTickets.push({
+            _id: ticket._id,        
+            amount: ticket.amount,
+            film:{
+                _id: film._id,
+                name: film.name,
+                avatarUrl: film.avatarUrl
+            },
+            cinema:{
+                _id: cinema._id,
+                name: cinema.name
+            },
+            room: filmSchedule.room,
+            seats: ticket.seats,
+            time: filmSchedule.time
+        })
+    }
+
+    ctx.state.paging = utils.generatePaging(skipPage, limit, total)
+
+    ctx.body = infoTickets
+}

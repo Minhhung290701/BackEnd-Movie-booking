@@ -230,7 +230,7 @@ exports.checkExistInDate = async (filmId, time) => {
 }
 
 
-exports.getFilmScheduleByCinemaId = async id => {
+exports.getFilmScheduleById = async id => {
     const filmSchedule = await FilmScheduleSchema.findById(id).lean()
 
     return filmSchedule
@@ -244,7 +244,9 @@ exports.bookingSuccess = async (id, seats) => {
         newSeats[x-1].isBooked = true
     }
 
-    await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats})
+    const newNumEmptySeat = filmSchedule.newNumEmptySeat - seats.length
+
+    await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats, newNumEmptySeat: newNumEmptySeat})
 
     return 'success'
 }

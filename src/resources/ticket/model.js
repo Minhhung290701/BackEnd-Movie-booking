@@ -30,3 +30,11 @@ exports.findById = async (id) => {
 
     return ticket
 }
+
+exports.getTickets = async (profileId,limit, skip) => {
+    let total
+    let tickets
+    total = await TicketSchema.count({profileId: profileId,status: "success"})
+    tickets = await TicketSchema.find({profileId: profileId,status: "success"}).sort({createdAt:-1}).skip(skip).limit(limit)
+    return {tickets, total}
+}

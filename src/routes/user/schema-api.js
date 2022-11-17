@@ -50,3 +50,11 @@ exports.booking = {
         amount: Joi.number()
     })
 }
+
+
+exports.getTickets = {
+    query: Joi.object({
+        limit: Joi.number(),
+        skipPage: Joi.number()
+    })
+}
