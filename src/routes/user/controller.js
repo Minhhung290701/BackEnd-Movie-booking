@@ -171,7 +171,7 @@ exports.sortObject = (o) => {
     return sorted;
 }
 
-exports.vnpReturn = async ctx => {
+exports.vnpIpn = async ctx => {
     var vnp_Params = Object.assign({},ctx.query) ;
     //debug.log(vnp_Params)
     var secureHash = vnp_Params['vnp_SecureHash'];

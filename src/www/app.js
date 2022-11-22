@@ -2,6 +2,7 @@ const Koa = require('koa')
 const koaBody = require('koa-body')
 const compress = require('koa-compress')
 const zlib = require('zlib')
+const cors = require('cors')
 
 const router = require('./router')
 const responseHandler = require('./response-handler')
@@ -38,6 +39,8 @@ app.use(
         formLimit: process.env.FORM_LIMIT,
     }),
 )
+
+app.use(cors())
 
 app.use(responseHandler) // always above routes & below compress
 app.use(router.routes())
