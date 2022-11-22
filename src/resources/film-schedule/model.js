@@ -237,7 +237,7 @@ exports.getFilmScheduleById = async id => {
 }
 
 exports.bookingSuccess = async (id, seats) => {
-    const filmSchedule = await FilmScheduleSchema.findById(id).lean()
+    let filmSchedule = await FilmScheduleSchema.findById(id).lean()
     const newSeats = filmSchedule.seats
 
     for (let x of seats) {
@@ -247,6 +247,11 @@ exports.bookingSuccess = async (id, seats) => {
     const newNumEmptySeat = filmSchedule.numEmptySeat - seats.length
 
     await FilmScheduleSchema.findByIdAndUpdate(id, {seats: newSeats, numEmptySeat: newNumEmptySeat})
+    const film = await Film.Model.getFilmById(filmSchedule.filmId)
+    const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
 
-    return 'success'
+    filmSchedule.film = film
+    filmSchedule.cinema = cinema
+
+    return filmSchedule
 }

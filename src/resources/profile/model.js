@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const { Account } = require('..')
 const ProfileSchema = require('./schema-mg')
 
 
@@ -67,6 +68,8 @@ exports.bookingSuccess = async (profileId, amount) => {
     }
 
     await ProfileSchema.findByIdAndUpdate(profile, fields)
+    const account = await Account.Model.getAccountById(profile.accountId)
+    profile.email = account.gmail
 
-    return 'success'
+    return account
 }
