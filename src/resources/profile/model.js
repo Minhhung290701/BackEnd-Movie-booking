@@ -71,5 +71,5 @@ exports.bookingSuccess = async (profileId, amount) => {
     const account = await Account.Model.getAccountById(profile.accountId)
     profile.email = account.gmail
 
-    return account
+    return profile
 }

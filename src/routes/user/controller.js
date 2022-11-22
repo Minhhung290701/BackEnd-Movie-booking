@@ -171,9 +171,9 @@ exports.sortObject = (o) => {
     return sorted;
 }
 
-exports.vnpIpn = async ctx => {
+exports.vnpReturn = async ctx => {
     var vnp_Params = Object.assign({},ctx.query) ;
-    debug.log(vnp_Params)
+    //debug.log(vnp_Params)
     var secureHash = vnp_Params['vnp_SecureHash'];
 
     delete vnp_Params?.vnp_SecureHash
@@ -212,7 +212,7 @@ exports.vnpIpn = async ctx => {
             let filmSchedule = await FilmSchedule.Model.bookingSuccess(ticket.filmScheduleId,ticket.seats )
             debug.log(profile)
             debug.log(filmSchedule)
-            utils.sendMail(profile.email, emailSubject, null, htmlTemplate.booingTicketSuccess(ticketId, filmSchedule))
+            utils.sendMail(profile.email, emailSubject, null, htmlTemplate.booingTicketSuccess(ticket, filmSchedule))
         }
         ctx.body = 'done'
     }
@@ -221,7 +221,7 @@ exports.vnpIpn = async ctx => {
     }
 }
 
-exports.vnpReturn = async ctx => {
+/* exports.vnpReturn = async ctx => {
     var vnp_Params = Object.assign({},ctx.query) ;
     //debug.log(vnp_Params)
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -236,12 +236,12 @@ exports.vnpReturn = async ctx => {
     delete vnp_Params.level
     delete vnp_Params.timestamp
 
-/*     var signData = querystring.stringify(vnp_Params, { encode: false });
+     var signData = querystring.stringify(vnp_Params, { encode: false });
     debug.log(signData)
     var crypto = require("crypto");     
     var hmac = crypto.createHmac("sha512", VNP_HASHSECRET);
     var checksum = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex");     
-    debug.log(checksum) */
+    debug.log(checksum) 
 
     let signData = VNP_HASHSECRET + querystring.stringify(vnp_Params, { encode: false });
 
@@ -263,7 +263,7 @@ exports.vnpReturn = async ctx => {
         ctx.body = 'faild'
     }
 }
-
+ */
 
 
 
