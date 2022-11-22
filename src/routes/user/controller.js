@@ -2,6 +2,7 @@ const {VNP_TMNCODE, VNP_HASHSECRET, VNP_URL, VNP_RETURNURL} = process.env
 const moment = require('moment-timezone');
 const {promisify} = require('util');
 const getIP = promisify(require('external-ip')());
+const htmlTemplate = require('./html-template')
 
 const { Account, Profile, FilmSchedule , Ticket, Film, Cinema} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs');
@@ -71,7 +72,7 @@ exports.booking = async ctx => {
     const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
 
     const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(filmScheduleId)
-    debug.log(filmSchedule)
+    //debug.log(filmSchedule)
 
 
     if(!filmSchedule || !filmSchedule?._id) {
@@ -92,22 +93,16 @@ exports.booking = async ctx => {
         throw new DataError('Số tiền không hợp lệ')
     }
 
-    debug.log({
-        profileId: profile._id,
-        filmScheduleId:filmScheduleId,
-        seats:seats,
-        amount:amount,
-    })
     const ticket = await Ticket.Model.createTicket({
         profileId: profile._id,
         filmScheduleId:filmScheduleId,
         seats:seats,
         amount:amount,
     })
-    debug.log(2)
+    //debug.log(2)
 
     let ipAddr = await getIP()
-    debug.log(ticket._id)
+    //debug.log(ticket._id)
     let orderId = ticket._id.toString()
     var vnp_Params = {};
 
@@ -143,7 +138,7 @@ exports.booking = async ctx => {
 
     var querystring = require('qs');
     var signData = VNP_HASHSECRET + querystring.stringify(vnp_Params, { encode: false });
-    console.log(signData)
+    //console.log(signData)
 
     var sha256 = require('sha256');
 
@@ -199,12 +194,12 @@ exports.vnpIpn = async ctx => {
 
     let signData = VNP_HASHSECRET + querystring.stringify(vnp_Params, { encode: false });
 
-    debug.log(signData)
+    //debug.log(signData)
 
     let sha256 = require('sha256');
 
     let checksum = sha256(signData);
-    debug.log(checksum)
+    //debug.log(checksum)
 
     if(secureHash === secureHash){
         var ticketId = vnp_Params['vnp_TxnRef'];
@@ -212,8 +207,12 @@ exports.vnpIpn = async ctx => {
         var rspCode = vnp_Params['vnp_ResponseCode'];
         await Ticket.Model.responseBooking(ticketId,rspCode)
         if(rspCode == '00') {
-            await Profile.Model.bookingSuccess( ticket.profileId,ticket.amount)
-            await FilmSchedule.Model.bookingSuccess(ticket.filmScheduleId,ticket.seats )
+            const emailSubject = 'Booking ticket Success - Beta'
+            let profile = await Profile.Model.bookingSuccess( ticket.profileId,ticket.amount)
+            let filmSchedule = await FilmSchedule.Model.bookingSuccess(ticket.filmScheduleId,ticket.seats )
+            debug.log(profile)
+            debug.log(filmSchedule)
+            utils.sendMail(profile.email, emailSubject, null, htmlTemplate.booingTicketSuccess(ticketId, filmSchedule))
         }
         ctx.body = 'done'
     }
@@ -224,7 +223,7 @@ exports.vnpIpn = async ctx => {
 
 exports.vnpReturn = async ctx => {
     var vnp_Params = Object.assign({},ctx.query) ;
-    debug.log(vnp_Params)
+    //debug.log(vnp_Params)
     var secureHash = vnp_Params['vnp_SecureHash'];
     
     delete vnp_Params?.vnp_SecureHash;
