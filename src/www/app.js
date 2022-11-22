@@ -2,7 +2,7 @@ const Koa = require('koa')
 const koaBody = require('koa-body')
 const compress = require('koa-compress')
 const zlib = require('zlib')
-const cors = require('cors')
+const cors = require('@koa/cors')
 
 const router = require('./router')
 const responseHandler = require('./response-handler')
