@@ -1,6 +1,5 @@
-const { Area, Cinema, Film, FilmSchedule, Banner} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Banner, New} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
-const {VNP_TMNCODE, VNP_HASHSECRET, VNP_URL, VNP_RETURNURL} = process.env
 
 const debug = Debug()
 const {
@@ -156,4 +155,13 @@ exports.getTime = async ctx => {
     }
 
     ctx.body = times
+}
+
+
+exports.getNews = async ctx => {
+    const limit = ctx.query.limit || 6
+
+    const news = await New.Model.getNews(limit)
+
+    ctx.body = news
 }

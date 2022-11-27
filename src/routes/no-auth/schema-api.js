@@ -59,3 +59,9 @@ exports.getFilmSchedule = {
 exports.getTime = {
     params: Joi.object({ id }),
 }
+
+exports.getNews = {
+    query: Joi.object({
+        limit: Joi.number()
+    })
+}

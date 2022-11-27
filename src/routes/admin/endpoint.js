@@ -26,5 +26,7 @@ router.post('/film-schedule', validate(schemas.addFilmSchedule), ctrl.addFilmSch
 router.get('/user/get-users', validate(schemas.getUsers), ctrl.getUsers)
 router.get('/user/get-locked-users', validate(schemas.getUsers), ctrl.getLockedUsers )
 router.delete('/user/:id', validate(schemas.delete), ctrl.deleteAndUnDeleteUser)
+router.post('/new', validate(schemas.addNew), ctrl.addNew)
+router.delete('/new/:id', validate(schemas.delete),ctrl.deleteNew)
 
 module.exports = [router]

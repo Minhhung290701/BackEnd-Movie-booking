@@ -28,5 +28,7 @@ router.get('/film-schedule/get-film-schedules-by-cinema', validate(schemas.getFi
 
 router.get('/time/:id', validate(schemas.getTime), ctrl.getTime)
 
+router.get('/new', validate(schemas.getNews), ctrl.getNews)
+
 
 module.exports = [router]

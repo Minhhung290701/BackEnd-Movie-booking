@@ -1,4 +1,4 @@
-const { Area, Cinema, Film, FilmSchedule, Profile, Banner} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Profile, Banner, New} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 
 const debug = Debug()
@@ -193,3 +193,19 @@ exports.deleteAndUnDeleteUser = async ctx => {
     ctx.body = 'success'
 }
 
+exports.addNew = async ctx => {
+    const fields = ctx.request.body
+    debug.log(fields)
+
+    const newi = await New.Model.creatNew(fields)
+
+    ctx.body = newi
+}
+
+exports.deleteNew = async ctx => {
+    const {id} = ctx.params
+
+    await New.Model.deleteNew(id)
+
+    ctx.body = 'success'
+}

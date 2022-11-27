@@ -74,3 +74,12 @@ exports.getUsers = {
         skipPage: Joi.number()
     })
 }
+
+exports.addNew = {
+    body: Joi.object({
+        type: Joi.string(),
+        title: Joi.string(),
+        imgUrl: Joi.string(),
+        description: Joi.string()
+    })
+}
