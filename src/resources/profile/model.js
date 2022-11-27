@@ -63,7 +63,7 @@ exports.bookingSuccess = async (profileId, amount) => {
         totalPay: newPay
     }
 
-    if(newPay >= 10000000) {
+    if(newPay >= 5000000) {
         fields.memberClass = 'vip'
     }
 

@@ -89,6 +89,10 @@ exports.booking = async ctx => {
 
     const checkAmout = seats.length*50000
 
+    if(profile.memberClass == 'vip') {
+        checkAmout = checkAmout*0.9
+    }
+
     if(checkAmout !== amount) {
         throw new DataError('Số tiền không hợp lệ')
     }
