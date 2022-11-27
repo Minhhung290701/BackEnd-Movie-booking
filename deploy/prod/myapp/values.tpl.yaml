@@ -47,12 +47,9 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-    cpu: 200m
-    memory: 256Mi
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 10m
+    memory: 64Mi
 
 
 nodeSelector: {}
@@ -71,12 +68,9 @@ redis:
     password: "123123"
   master:
     resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 10m
+        memory: 32Mi
     kind: Deployment
     persistence:
       enabled: false
@@ -109,12 +103,9 @@ mongodb:
   startupProbe:
     enabeld: false
   resources:
-    limits:
-      cpu: 300m
-      memory: 256Mi
     requests:
-      cpu: 200m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
   # replicaSetConfigurationSettings:
   #   enabled: false
   persistence:
