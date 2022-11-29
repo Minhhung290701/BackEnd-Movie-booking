@@ -189,10 +189,10 @@ exports.checkExist = async (filmId, cinemaId, room, time, min) => {
         cinemaId:cinemaId,
         room:room,
         time: {
-            $lte: new Date(time.getTime()-200*60000)
+            $gte: new Date(time.getTime()-200*60000)
         }
     }).lean()
-    //debug.log(filmSchedules)
+    debug.log(filmSchedules)
 
 
     await Promise.all(
