@@ -157,9 +157,9 @@ exports.getTime = async ctx => {
     const test = await FilmSchedule.Schema.find({filmId:id, time: {
         $gte: new Date(),
         $lte: new Date(today.getTime()+86400000)
-    }})
+    }}).lean()
 
-    if(!test) {
+    if(test.length == 0) {
         times.shift()
     }
 
