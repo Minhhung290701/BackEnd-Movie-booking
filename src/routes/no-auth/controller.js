@@ -1,5 +1,6 @@
 const { Area, Cinema, Film, FilmSchedule, Banner, New} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
+const { slice } = require('lodash')
 
 const debug = Debug()
 const {
@@ -143,7 +144,9 @@ exports.getTime = async ctx => {
     const film = await Film.Model.getFilmById(id)
 
     const now = formatDate(new Date())
-    let today =  new Date(now)
+    debug.log(now)
+    const nows = now.slice(0,4)+'-'+now.slice(5,7)+'-'+now.slice(8,10)+'T00:00:00.000Z'
+    let today =  new Date(nows)
     let times=[]
     mili = today.getTime()
     for (let i = 0; i< 6 ; i++) {
