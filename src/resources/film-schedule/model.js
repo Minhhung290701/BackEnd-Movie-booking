@@ -104,7 +104,7 @@ exports.getFilmScheduleByCinemaId = async (cinemaId, date) => {
     const tomorrow = new Date(newlimi);
 
     let search = {
-        cinemaId:cinemaId
+        cinemaId:cinemaId.toString()
     }
 
     let begin = (today.getTime() < now.getTime())? now:today
@@ -113,6 +113,8 @@ exports.getFilmScheduleByCinemaId = async (cinemaId, date) => {
         $gte: begin,
         $lte: tomorrow
     }
+
+    debug.log(search)
 
     const filmSchedules = await FilmScheduleSchema.find(search).sort({time:1}).lean()
     debug.log(filmSchedules)

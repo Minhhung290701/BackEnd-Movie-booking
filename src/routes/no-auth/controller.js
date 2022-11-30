@@ -154,6 +154,15 @@ exports.getTime = async ctx => {
         }
     }
 
+    const test = await FilmSchedule.Schema.find({filmId:id, time: {
+        $gte: new Date(),
+        $lte: new Date(today.getTime()+86400000)
+    }})
+
+    if(!test) {
+        times.shift()
+    }
+
     ctx.body = times
 }
 
