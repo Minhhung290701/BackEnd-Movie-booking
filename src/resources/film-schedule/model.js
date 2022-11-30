@@ -191,24 +191,31 @@ exports.checkExist = async (filmId, cinemaId, room, time, min) => {
         cinemaId:cinemaId,
         room:room,
         time: {
-            $gte: new Date(time.getTime()-200*60000)
+            $gte: new Date(time.getTime()-200*60000),
+            $lte: new Date(time.getTime())
         }
     }).lean()
-    debug.log(filmSchedules)
+    debug.log(filmSchedules.length)
 
+
+    debug.log(new Date(time.getTime()-200*60000))
 
     await Promise.all(
         await filmSchedules.map(async (filmSchedule)=>{
             const film = await Film.Model.getFilmById(filmSchedule.filmId)
             //debug.log(time, new Date(filmSchedule.time.getTime()+film.durationMin*60000))
             //debug.log(time.getTime(),filmSchedule.time.getTime()+(film.durationMin+10)*60000, film.durationMin)
+            //debug.log(filmSchedule.filmId)
+            //debug.log(film)
 
             if(time.getTime() < filmSchedule.time.getTime()+(film.durationMin+10)*60000) {
                 check2 = false
+                //debug.log(filmSchedule)
             }
         })
     )
 
+    debug.log(check2)
 
     return check2
 }
