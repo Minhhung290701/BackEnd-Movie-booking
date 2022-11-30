@@ -68,6 +68,7 @@ exports.login = async ctx => {
 
 
 exports.booking = async ctx => {
+    const VNP_RETURNURL1 = ctx.request.body.vnpReturnUrl || VNP_RETURNURL
     const {profile} = ctx.state
     const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
 
@@ -121,7 +122,7 @@ exports.booking = async ctx => {
     vnp_Params['vnp_OrderInfo'] = 'Thanh toan hoa don';
     vnp_Params['vnp_OrderType'] = 'topup';
     vnp_Params['vnp_Amount'] = amount * 100;
-    vnp_Params['vnp_ReturnUrl'] = VNP_RETURNURL;
+    vnp_Params['vnp_ReturnUrl'] = VNP_RETURNURL1;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = parseInt(moment().tz('Asia/Ho_Chi_Minh').format('YYYYMMDDHHmmss')).toString();
     if(bankCode !== null && bankCode !== ''){
