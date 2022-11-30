@@ -149,7 +149,7 @@ exports.getTime = async ctx => {
     let today =  new Date(nows)
     let times=[]
     mili = today.getTime()
-    for (let i = 0; i< 6 ; i++) {
+    for (let i = 0; i<= 6 ; i++) {
         const date = new Date(mili+i*86400000)
         const check = await FilmSchedule.Model.checkExistInDate(film._id, date)
         if(check) {
