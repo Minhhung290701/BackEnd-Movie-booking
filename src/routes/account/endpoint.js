@@ -10,7 +10,7 @@ const schemas = require('./schema-api')
 const router = new Router({ prefix: '/auth'})
 
 router.post('/register', validate(schemas.register), ctrl.register)
-router.post('/login',validate(schemas.login), ctrl.login)
+router.post('/login',validate(schemas.login), ctrl.login) 
 router.put('/password',auth, validate(schemas.changePassword), ctrl.changePassword)
 router.post('/forgot-password', validate(schemas.forgotPassword), ctrl.forgotPassword)
 router.post(
