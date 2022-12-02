@@ -47,7 +47,8 @@ exports.booking = {
     body: Joi.object({
         filmScheduleId:Joi.string(),
         seats: Joi.array(),
-        amount: Joi.number()
+        amount: Joi.number(),
+        vnpReturnUrl: Joi.string()
     })
 }
 
