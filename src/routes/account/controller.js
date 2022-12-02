@@ -70,6 +70,7 @@ exports.login = async ctx => {
 
     ctx.body = {
         ...profile,
+        isAdmin: false,
         accessToken: utils.generateAccessToken(profile),
         refreshToken: utils.generateRefreshToken(profile),
     }

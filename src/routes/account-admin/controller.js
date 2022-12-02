@@ -51,6 +51,7 @@ exports.login = async ctx => {
 
     ctx.body = {
         ...adminAccount,
+        isAdmin: true,
         accessToken: utils.generateAccessToken(adminAccount),
         refreshToken: utils.generateRefreshToken(adminAccount),
     }
