@@ -301,11 +301,58 @@ exports.getTickets = async ctx => {
             },
             room: filmSchedule.room,
             seats: ticket.seats,
-            time: filmSchedule.time
+            time: filmSchedule.time,
+            isReaded: ticket.isReaded
         })
     }
 
     ctx.state.paging = utils.generatePaging(skipPage, limit, total)
 
     ctx.body = infoTickets
+}
+
+
+exports.getTicket = async ctx => {
+    const {profile} = ctx.state
+    const {id} = ctx.params
+
+    const ticket = await Ticket.Model.findById(id)
+
+    const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(ticket.filmScheduleId)
+    const film = await Film.Model.getFilmById(filmSchedule.filmId)
+    const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
+
+    ctx.body = {
+            _id: ticket._id,        
+            amount: ticket.amount,
+            film:{
+                _id: film._id,
+                name: film.name,
+                avatarUrl: film.avatarUrl
+            },
+            cinema:{
+                _id: cinema._id,
+                name: cinema.name
+            },
+            room: filmSchedule.room,
+            seats: ticket.seats,
+            time: filmSchedule.time,
+            isReaded: ticket.isReaded
+    }
+}
+
+
+exports.readTicket = async ctx => {
+    const {profile} = ctx.state
+    const {id} = ctx.request.body
+
+    const ticket = await Ticket.Model.findById(id)
+
+    if(profile._id != ticket.profileId) {
+        throw new AuthenticationError('User can not access')
+    }
+
+    await Ticket.Model.readTicket(id)
+
+    ctx.body = 'success'
 }

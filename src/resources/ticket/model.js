@@ -38,3 +38,9 @@ exports.getTickets = async (profileId,limit, skip) => {
     tickets = await TicketSchema.find({profileId: profileId,status: "success"}).sort({createdAt:-1}).skip(skip).limit(limit)
     return {tickets, total}
 }
+
+exports.readTicket = async id => {
+    await TicketSchema.findByIdAndUpdate(id, {isReaded: true})
+
+    return 'success'
+}

@@ -13,6 +13,7 @@ const ticketSchema = new Schema(
         amount: mf().number().j(),
         seats: [],
         status: mf().string('pending').j(),
+        isReaded: mf().boolean(false).j()
     },
     { timestamps: true},
 )   

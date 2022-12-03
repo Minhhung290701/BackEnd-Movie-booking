@@ -3,6 +3,8 @@ const Joi = require('joi').extend(require('@joi/date'))
 const regexPhoneNumber = /[0-9-+.\s]/
 const regexPassword = /[a-zA-Z0-9#?!@$%^&*-]/
 
+const id = Joi.objectId()
+
 const model = {
     callingCode: Joi.string(),
     phoneNumber: Joi.string().regex(regexPhoneNumber).max(20),
@@ -57,5 +59,15 @@ exports.getTickets = {
     query: Joi.object({
         limit: Joi.number(),
         skipPage: Joi.number()
+    })
+}
+
+exports.getTicket = {
+    params: Joi.object({ id }),
+}
+
+exports.readTicket = {
+    body : Joi.object({
+        id
     })
 }
