@@ -1,4 +1,6 @@
 const Joi = require('joi').extend(require('@joi/date'))
+Joi.objectId = require('joi-objectid')(Joi)
+
 
 const regexPhoneNumber = /[0-9-+.\s]/
 const regexPassword = /[a-zA-Z0-9#?!@$%^&*-]/
