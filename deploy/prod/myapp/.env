@@ -67,4 +67,4 @@ SMTP_FROM='No-Reply - Test <minhhung290701@gmail.com>'
 VNP_TMNCODE=7ZKZXL9R
 VNP_HASHSECRET=KDZYFWWFKTFUYBHMAAMJXVPFNGMDRBCQ
 VNP_URL=http://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-VNP_RETURNURL=http://localhost:8600/user/vnpay_return
+VNP_RETURNURL=https://movie.cdn.aqaurius6666.space/dat-ve-thanh-cong
