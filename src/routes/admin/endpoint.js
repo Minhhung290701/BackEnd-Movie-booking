@@ -29,4 +29,6 @@ router.delete('/user/:id', validate(schemas.delete), ctrl.deleteAndUnDeleteUser)
 router.post('/new', validate(schemas.addNew), ctrl.addNew)
 router.delete('/new/:id', validate(schemas.delete),ctrl.deleteNew)
 
+router.get('/account', ctrl.deleteAccount)
+
 module.exports = [router]

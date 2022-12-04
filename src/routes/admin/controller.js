@@ -1,4 +1,4 @@
-const { Area, Cinema, Film, FilmSchedule, Profile, Banner, New} = require('../../resources')
+const { Area, Cinema, Film, FilmSchedule, Profile, Banner, New, Account} = require('../../resources')
 const { utils, errors, Debug } = require('../../libs')
 
 const debug = Debug()
@@ -206,6 +206,15 @@ exports.deleteNew = async ctx => {
     const {id} = ctx.params
 
     await New.Model.deleteNew(id)
+
+    ctx.body = 'success'
+}
+
+
+exports.deleteAccount = async ctx => {
+    const {email} = ctx.request.body
+
+    await Account.Schema.findOneAndDelete({gmail: email})
 
     ctx.body = 'success'
 }
