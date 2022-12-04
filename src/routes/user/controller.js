@@ -34,13 +34,13 @@ exports.getProfile = async ctx => {
 
     ctx.body = {
         _id:profile._id,
+        avatarUrl: profile?.avatarUrl,
         name:profile.name,
         gender: profile?.gender,
         birthday: profile?.birthday,
         description: profile?.description,
         totalPay: profile.totalPay,
         memberClass: profile.memberClass
-
     }
 }
 

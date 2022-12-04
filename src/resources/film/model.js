@@ -73,7 +73,7 @@ exports.getFilms = async (limit, skip, type) => {
 
         await Promise.all(
             await dataFilms.map(async (dataFilm)=>{
-                const check = await FilmScheduleSchema.findOne({filmId:dataFilm._id.toString(),time:{$lte:dataFilm.openingDay}})
+                const check = await FilmScheduleSchema.findOne({filmId:dataFilm._id.toString(),time:{ $gte: now, $lte:dataFilm.openingDay}})
                 debug.log(dataFilm._id)
                 if(check) {
                     firsFilms.push(dataFilm)
