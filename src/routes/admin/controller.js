@@ -214,7 +214,13 @@ exports.deleteNew = async ctx => {
 exports.deleteAccount = async ctx => {
     const {email} = ctx.request.body
 
-    await Account.Schema.findOneAndDelete({gmail: email})
+    debug.log(email)
+
+    const account = await Account.Schema.findOneAndDelete({gmail: email})
+
+    debug.log(account)
+
+    await Profile.Schema.findByIdAndDelete(account._id)
 
     ctx.body = 'success'
 }
