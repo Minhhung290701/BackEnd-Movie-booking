@@ -58,6 +58,13 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=465
 SMTP_SECURE=true
 SMTP_TLS=
-SMTP_USERNAME=vahaha.test.1@gmail.com
-SMTP_PASSWORD=ojimpzxdqldbrlko
-SMTP_FROM='No-Reply - Test <vahaha.test.1@gmail.com>'
+SMTP_USERNAME=minhhung290701@gmail.com
+SMTP_PASSWORD=osgtxmxuodmbgnao
+SMTP_FROM='No-Reply - Test <minhhung290701@gmail.com>'
+
+
+#[vnpay]
+VNP_TMNCODE=7ZKZXL9R
+VNP_HASHSECRET=KDZYFWWFKTFUYBHMAAMJXVPFNGMDRBCQ
+VNP_URL=http://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+VNP_RETURNURL=http://localhost:8600/user/vnpay_return
