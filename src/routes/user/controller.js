@@ -348,10 +348,6 @@ exports.readTicket = async ctx => {
 
     const ticket = await Ticket.Model.findById(id)
 
-    if(profile._id != ticket.profileId) {
-        throw new AuthenticationError('User can not access')
-    }
-
     await Ticket.Model.readTicket(id)
 
     ctx.body = 'success'
