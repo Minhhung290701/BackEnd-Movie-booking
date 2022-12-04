@@ -26,7 +26,8 @@ exports.update = {
         id:Joi.string()
     }),
     body: Joi.object({
-        name: Joi.string()
+        name: Joi.string(),
+        avatarUrl: Joi.string(),
     })
 }
 
