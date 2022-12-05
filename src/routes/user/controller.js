@@ -323,21 +323,21 @@ exports.getTicket = async ctx => {
     const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
 
     ctx.body = {
-            _id: ticket._id,        
-            amount: ticket.amount,
+            _id: ticket?._id,        
+            amount: ticket?.amount,
             film:{
-                _id: film._id,
-                name: film.name,
-                avatarUrl: film.avatarUrl
+                _id: film?._id,
+                name: film?.name,
+                avatarUrl: film?.avatarUrl
             },
             cinema:{
-                _id: cinema._id,
-                name: cinema.name
+                _id: cinema?._id,
+                name: cinema?.name
             },
-            room: filmSchedule.room,
-            seats: ticket.seats,
-            time: filmSchedule.time,
-            isReaded: ticket.isReaded
+            room: filmSchedule?.room,
+            seats: ticket?.seats,
+            time: filmSchedule?.time,
+            isReaded: ticket?.isReaded
     }
 }
 
