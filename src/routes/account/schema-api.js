@@ -12,6 +12,7 @@ exports.register = {
     body: Joi.object({
         gmail: model.gmail.required(),
         password: model.password.required(),
+        repassword: Joi.string(),
         name: Joi.string().required(),
         birthday: Joi.date().format('YYYY-MM-DD').utc(),
         gender: Joi.string()
