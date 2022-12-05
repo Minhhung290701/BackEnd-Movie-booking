@@ -278,31 +278,31 @@ exports.getTickets = async ctx => {
     const skipPage = parseInt(ctx.query.skipPage || '0')
     const skip = parseInt(skipPage || '0') * limit
 
-    const {tickets, total} = await Ticket.Model.getTickets(profile._id,limit,skip)
+    const {tickets, total} = await Ticket.Model.getTickets(profile?._id,limit,skip)
 
     let infoTickets = []
 
     for(let ticket of tickets) {
-        const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(ticket.filmScheduleId)
-        const film = await Film.Model.getFilmById(filmSchedule.filmId)
-        const cinema = await Cinema.Model.getCinema(filmSchedule.cinemaId)
+        const filmSchedule = await FilmSchedule.Model.getFilmScheduleById(ticket?.filmScheduleId)
+        const film = await Film.Model.getFilmById(filmSchedule?.filmId)
+        const cinema = await Cinema.Model.getCinema(filmSchedule?.cinemaId)
 
         infoTickets.push({
-            _id: ticket._id,        
-            amount: ticket.amount,
+            _id: ticket?._id,        
+            amount: ticket?.amount,
             film:{
-                _id: film._id,
-                name: film.name,
-                avatarUrl: film.avatarUrl
+                _id: film?._id,
+                name: film?.name,
+                avatarUrl: film?.avatarUrl
             },
             cinema:{
-                _id: cinema._id,
-                name: cinema.name
+                _id: cinema?._id,
+                name: cinema?.name
             },
-            room: filmSchedule.room,
-            seats: ticket.seats,
-            time: filmSchedule.time,
-            isReaded: ticket.isReaded
+            room: filmSchedule?.room,
+            seats: ticket?.seats,
+            time: filmSchedule?.time,
+            isReaded: ticket?.isReaded
         })
     }
 
