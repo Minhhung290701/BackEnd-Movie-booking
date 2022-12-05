@@ -20,5 +20,6 @@ router.get('/tickets',auth, validate(schemas.getTickets), ctrl.getTickets)
 router.get('/ticket/:id', auth, validate(schemas.getTicket), ctrl.getTicket)
 router.put('/ticket/readTicket', auth, validate(schemas.readTicket), ctrl.readTicket)
 
+router.del('/tickets', auth, ctrl.deleteTicket)
 
 module.exports = [router]

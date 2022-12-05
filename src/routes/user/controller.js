@@ -352,3 +352,11 @@ exports.readTicket = async ctx => {
 
     ctx.body = 'success'
 }
+
+exports.deleteTicket = async ctx => {
+    const {profile} = ctx.state
+    
+    await Ticket.Schema.deleteMany({profileId:profile._id})
+
+    ctx.body = 'success'
+}
