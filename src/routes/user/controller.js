@@ -68,7 +68,7 @@ exports.login = async ctx => {
 
 
 exports.booking = async ctx => {
-    const VNP_RETURNURL1 = ctx.request.body.vnpReturnUrl || 'https://movie.cdn.aqaurius6666.space/dat-ve-thanh-cong'
+    const VNP_RETURNURL1 = ctx.request.body.vnpReturnUrl ? ctx.request.body.vnpReturnUrl :g 'https://movie.cdn.aqaurius6666.space/dat-ve-thanh-cong'
     const {profile} = ctx.state
     const {filmScheduleId, seats, amount, bankCode} = ctx.request.body
 
